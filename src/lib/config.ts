@@ -2,32 +2,21 @@
  * src/lib/config.ts
  * Toss in App SDK 연동 및 광고 추상화
  */
-import { GoogleAdMob, closeView } from '@apps-in-toss/web-framework';
-
-/** 리워드 광고 그룹 ID — 재뽑기용 (광고 시청 후 새 부적 뽑기) */
-const REWARD_AD_ID_PROD = import.meta.env.VITE_REWARD_AD_ID ?? 'ait.v2.live.5c06ff01e75a4884';
-
-/** 배너 광고 그룹 ID — 기록 페이지 하단 노출형 배너 */
-export const BANNER_AD_ID_PROD = import.meta.env.VITE_BANNER_AD_ID ?? 'ait.v2.live.41ce280c1bfe4683';
+import { GoogleAdMob, TossAds, closeView } from '@apps-in-toss/web-framework';
 
 /**
- * Toss Ads 공식 테스트 전용 광고 ID (리워드 광고)
- * 참고: https://developers-apps-in-toss.toss.im/ads/develop.html#테스트하기
+ * 리워드 광고 그룹 ID — 재뽑기용 (광고 시청 후 새 부적 뽑기)
+ * 환경변수 VITE_REWARD_AD_ID로 오버라이드 가능
  */
-const AD_GROUP_ID_TEST = 'ait-ad-test-rewarded-id';
+export const REWARD_AD_ID =
+  (import.meta.env.VITE_REWARD_AD_ID as string | undefined) ?? 'ait.v2.live.5c06ff01e75a4884';
 
-/** 배너 광고 테스트 ID */
-export const BANNER_AD_ID_TEST = 'ait-ad-test-banner-id';
-
-const _useTestAd = (() => {
-  const adEnv = import.meta.env.VITE_AD_ENV;
-  if (adEnv === 'test')       return true;
-  if (adEnv === 'production') return false;
-  return import.meta.env.DEV;
-})();
-
-const AD_GROUP_ID = _useTestAd ? AD_GROUP_ID_TEST : REWARD_AD_ID_PROD;
-export const BANNER_AD_ID = _useTestAd ? BANNER_AD_ID_TEST : BANNER_AD_ID_PROD;
+/**
+ * 배너 광고 그룹 ID — 기록 페이지 하단 노출형 배너
+ * 환경변수 VITE_BANNER_AD_ID로 오버라이드 가능
+ */
+export const BANNER_AD_ID =
+  (import.meta.env.VITE_BANNER_AD_ID as string | undefined) ?? 'ait.v2.live.41ce280c1bfe4683';
 
 /**
  * 미니앱 종료 — AIT closeView() 호출
@@ -38,9 +27,9 @@ export function closeApp(): void {
 }
 
 /**
- * AIT 환경 여부 확인
+ * AIT 리워드 광고 환경 여부 확인
  */
-function _isAitSupported(): boolean {
+function _isRewardAdSupported(): boolean {
   try {
     return GoogleAdMob.loadAppsInTossAdMob.isSupported() === true;
   } catch {
@@ -57,7 +46,7 @@ function _isAitSupported(): boolean {
  * - 개발/브라우저: Mock으로 항상 true 반환
  */
 export async function showRewardAd(): Promise<boolean> {
-  if (!_isAitSupported()) {
+  if (!_isRewardAdSupported()) {
     // 개발 환경 Mock
     await new Promise<void>(r => setTimeout(r, 500));
     console.log('[Mock] 광고 시청 완료 (개발 환경)');
@@ -67,7 +56,7 @@ export async function showRewardAd(): Promise<boolean> {
   // 1단계: 광고 로드
   await new Promise<void>((resolve, reject) => {
     const cleanup = GoogleAdMob.loadAppsInTossAdMob({
-      options: { adGroupId: AD_GROUP_ID },
+      options: { adGroupId: REWARD_AD_ID },
       onEvent: (event) => {
         if (event.type === 'loaded') {
           cleanup();
@@ -85,7 +74,7 @@ export async function showRewardAd(): Promise<boolean> {
   return new Promise<boolean>((resolve) => {
     let rewarded = false;
     GoogleAdMob.showAppsInTossAdMob({
-      options: { adGroupId: AD_GROUP_ID },
+      options: { adGroupId: REWARD_AD_ID },
       onEvent: (event) => {
         if (event.type === 'userEarnedReward') rewarded = true;
         if (event.type === 'dismissed')        resolve(rewarded);
@@ -95,3 +84,15 @@ export async function showRewardAd(): Promise<boolean> {
     });
   });
 }
+
+/**
+ * TossAds 배너 광고 환경 여부 확인
+ */
+export function isBannerAdSupported(): boolean {
+  try {
+    return TossAds.attachBanner.isSupported() === true;
+  } catch {
+    return false;
+  }
+}
+

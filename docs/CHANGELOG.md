@@ -1,5 +1,30 @@
 # 변경 이력 (CHANGELOG)
 
+## [1.3.0] — 2026-05-18
+
+### 광고 API 수정 — 실제 프로덕션 ID 및 올바른 배너 API
+
+**변경된 사항:**
+- `src/lib/config.ts`: 테스트 광고 ID(`ait-ad-test-*`) 및 `VITE_AD_ENV` 환경 변수 기반 분기 완전 제거
+  - 항상 프로덕션 ID 사용 (`VITE_REWARD_AD_ID` / `VITE_BANNER_AD_ID` 또는 하드코딩 기본값)
+  - `REWARD_AD_ID_PROD`, `BANNER_AD_ID_PROD`, `AD_GROUP_ID_TEST`, `BANNER_AD_ID_TEST`, `_useTestAd` 제거
+  - `isBannerAdSupported()` 함수 export 추가 (`TossAds.attachBanner.isSupported()` 래퍼)
+- `src/components/BannerAd.tsx`: 잘못된 API(`GoogleAdMob.showAppsInTossBannerAd`) → 올바른 API(`TossAds.attachBanner`) 로 전면 교체
+  - `onAdFailedToRender` / `onNoFill` 콜백 처리 — 광고 미채움 시 컴포넌트 자동 숨김(`setHidden(true)`)
+  - cleanup: `result.destroy()` 호출 (컴포넌트 언마운트 시)
+- `.env.example`, `.env.local`: `VITE_AD_ENV` 항목 제거 (더 이상 사용하지 않음)
+- `docs/ARCHITECTURE.md`: 섹션 1·2·4.5·4.6·8 최신화
+
+**변경된 파일:**
+- `src/lib/config.ts` — test ID 제거, `isBannerAdSupported` export 추가
+- `src/components/BannerAd.tsx` — `TossAds.attachBanner` API 로 전면 교체
+- `.env.example` — `VITE_AD_ENV` 제거
+- `.env.local` — `VITE_AD_ENV` 제거
+- `docs/ARCHITECTURE.md` — 최신화
+- `today-lucky-charm.ait` — 클린 빌드
+
+---
+
 ## [1.2.0] — 2026-05-18
 
 ### 앱 ID 변경 및 UX/광고 개선

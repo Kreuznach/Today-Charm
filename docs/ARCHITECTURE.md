@@ -5,7 +5,7 @@
 | 항목 | 값 |
 |------|-----|
 | 서비스명 | 오늘의 말랑부적 |
-| 앱 ID | today-charm |
+| 앱 ID | today-lucky-charm |
 | 플랫폼 | Toss in App (AIT) Mini-App |
 | 기술 스택 | React 18 + Vite 6 + TypeScript 5 |
 
@@ -14,7 +14,7 @@
 ## 2. 디렉터리 구조
 
 ```
-today-charm/
+today-lucky-charm/
 ├── src/
 │   ├── types/
 │   │   └── charm.ts          # 공유 TypeScript 타입 정의
@@ -108,26 +108,28 @@ localStorage
 ### 4.5 `src/lib/config.ts` — AIT SDK 래퍼
 
 ```typescript
-// 광고 환경 분기
-// VITE_AD_ENV=test → 테스트 광고 ID
-// production 빌드 → 프로덕션 광고 ID
-// 개발 환경 → mock 반환 (true)
+// 항상 프로덕션 광고 ID 사용 (테스트/프로덕션 분기 없음)
+// AIT 미지원 환경(개발/브라우저)에서는 리워드 광고 Mock 반환
 
-closeApp()       // AIT WebView 닫기
-showRewardAd()   // 리워드 광고 (재뽑기용), mock 지원
-BANNER_AD_ID     // 배너 광고 ID export (HistoryPage 하단 배너용)
+closeApp()              // AIT WebView 닫기
+showRewardAd()          // 리워드 광고 (재뽑기용), mock 지원
+REWARD_AD_ID            // 리워드 광고 ID export
+BANNER_AD_ID            // 배너 광고 ID export
+isBannerAdSupported()   // TossAds.attachBanner.isSupported() 래퍼
 ```
 
 **광고 ID 구성:**
 
-| 변수 | 용도 | 프로덕션 ID |
-|------|------|-------------|
+| 환경변수 | 용도 | 기본값 (프로덕션 ID) |
+|----------|------|---------------------|
 | `VITE_REWARD_AD_ID` | 광고 시청 후 재뽑기 (리워드) | `ait.v2.live.5c06ff01e75a4884` |
 | `VITE_BANNER_AD_ID` | 기록 페이지 하단 배너 (노출형) | `ait.v2.live.41ce280c1bfe4683` |
 
 ### 4.6 `src/components/BannerAd.tsx` — 배너 광고 컴포넌트
 
-- AIT 환경: `GoogleAdMob.showAppsInTossBannerAd` 로 배너 삽입
+- AIT 환경: `TossAds.attachBanner(adGroupId, target, options)` 로 배너 삽입
+  - `onAdFailedToRender` / `onNoFill` 콜백 → 광고 영역 자동 숨김
+  - cleanup: `result.destroy()` 호출 (컴포넌트 언마운트 시)
 - 개발/브라우저: placeholder 영역 표시
 - `HistoryPage` 하단에 마운트됨
 
@@ -194,6 +196,6 @@ npm run build:ait
 ## 8. 보안 고려사항
 
 - **개인정보 없음**: localStorage에 부적 기록만 저장, 사용자 식별 정보 없음
-- **광고 ID 분리**: 테스트/프로덕션 광고 그룹 ID를 환경 변수로 분리
+- **광고 ID 관리**: 항상 프로덕션 광고 ID 사용; 환경변수(`VITE_REWARD_AD_ID`, `VITE_BANNER_AD_ID`)로 오버라이드 가능
 - **XSS 방지**: 모든 렌더링은 React JSX를 통해 자동 이스케이프
 - **외부 네트워크 없음**: 모든 데이터는 로컬, API 호출 없음
