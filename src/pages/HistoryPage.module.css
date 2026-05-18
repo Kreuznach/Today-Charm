@@ -1,0 +1,142 @@
+.page {
+  padding: 24px 20px;
+  min-height: calc(100dvh - 72px);
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--gray-900);
+  letter-spacing: -0.5px;
+  margin-bottom: 20px;
+}
+
+/* 빈 상태 */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+  gap: 10px;
+}
+
+.emptyEmoji {
+  font-size: 52px;
+}
+
+.emptyText {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.emptySubText {
+  font-size: 14px;
+  color: var(--gray-400);
+}
+
+/* 목록 */
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dateBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dateText {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gray-600);
+}
+
+.todayMark {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--pink-dark);
+  background: var(--pink-light);
+  padding: 2px 7px;
+  border-radius: 100px;
+  letter-spacing: 0.5px;
+}
+
+/* 기록 카드 */
+.recordCard {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.recordEmoji {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.recordInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.recordName {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gray-900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recordMsg {
+  font-size: 12px;
+  color: var(--gray-600);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rerolledBadge {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--purple);
+  background: var(--purple-light);
+  padding: 3px 8px;
+  border-radius: 100px;
+  flex-shrink: 0;
+}
+
+/* 빈 기록 */
+.emptyRecord {
+  background: var(--gray-100);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.emptyRecordIcon {
+  font-size: 24px;
+  opacity: 0.4;
+}
+
+.emptyRecordText {
+  font-size: 14px;
+  color: var(--gray-400);
+}

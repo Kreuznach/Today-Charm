@@ -1,0 +1,146 @@
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  padding: 28px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+/* ── 등장 애니메이션 ── */
+
+/* 기본: 아래서 위로 페이드인 (히스토리·도감 카드 등) */
+.fadeIn {
+  animation: cardFadeIn 400ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+/* 첫 뽑기: 위에서 내려오며 튀어오름 */
+.reveal {
+  animation: cardReveal 620ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.75) translateY(-32px);
+  }
+  60% {
+    transform: scale(1.04) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* 재뽑기: 중심에서 확 퍼지며 미세 회전 */
+.burst {
+  animation: cardBurst 540ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes cardBurst {
+  from {
+    opacity: 0;
+    transform: scale(0.6) rotate(-4deg);
+  }
+  55% {
+    transform: scale(1.06) rotate(1.5deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.category {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-600);
+  background: var(--cream-deep);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.rarity {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pink-dark);
+  background: var(--pink-light);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.symbol {
+  font-size: 72px;
+  line-height: 1;
+  margin: 8px 0;
+  filter: drop-shadow(0 4px 12px rgba(255, 143, 171, 0.3));
+}
+
+.name {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--gray-900);
+  letter-spacing: -0.5px;
+  text-align: center;
+}
+
+.mainMessage {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--gray-600);
+  text-align: center;
+  line-height: 1.6;
+  background: var(--pink-light);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  width: 100%;
+}
+
+.divider {
+  width: 100%;
+  border: none;
+  border-top: 1px solid var(--gray-200);
+  margin: 4px 0;
+}
+
+.details {
+  list-style: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.details li {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.detailLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.detailValue {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-900);
+  line-height: 1.5;
+}

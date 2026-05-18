@@ -1,0 +1,30 @@
+# 환경 변수 (민감 정보)
+.env.local
+.env.*.local
+
+# 의존성
+node_modules/
+
+# 빌드 산출물
+dist/
+
+# AIT 빌드 번들 (배포 전 생성, git에 불필요)
+*.ait
+
+# AIT 검사 디렉토리
+_ait_inspect/
+
+# Granite 임시 파일
+.granite/
+
+# OS 생성 파일
+.DS_Store
+Thumbs.db
+
+# 에디터 설정
+.vscode/settings.json
+.idea/
+
+# 로그
+*.log
+npm-debug.log*
