@@ -9,7 +9,7 @@ import { defineConfig } from '@apps-in-toss/web-framework/config';
  * - brand.primaryColor: 디자인 확정 후 변경 가능
  */
 export default defineConfig({
-  appName: 'today-charm',
+  appName: 'today-lucky-charm',
 
   brand: {
     displayName: '오늘의 말랑부적',

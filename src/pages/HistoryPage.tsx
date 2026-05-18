@@ -7,6 +7,7 @@ import { getRecentRecords } from '../lib/storage';
 import { getRecentDates, formatDateKST, getTodayKST } from '../lib/date';
 import { getCharmEmoji } from '../data/charms';
 import type { DailyCharmRecord } from '../types/charm';
+import BannerAd from '../components/BannerAd';
 import styles from './HistoryPage.module.css';
 
 export default function HistoryPage() {
@@ -69,6 +70,7 @@ export default function HistoryPage() {
           })}
         </ul>
       )}
-    </div>
+      {/* 하단 배너 광고 */}
+      <BannerAd className={styles.banner} />    </div>
   );
 }

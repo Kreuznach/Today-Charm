@@ -1,5 +1,37 @@
 # 변경 이력 (CHANGELOG)
 
+## [1.2.0] — 2026-05-18
+
+### 앱 ID 변경 및 UX/광고 개선
+
+**변경된 사항:**
+- `appName`: `today-charm` → `today-lucky-charm` (AIT 중복 등록 방지)
+- 빌드 결과물: `today-charm.ait` → `today-lucky-charm.ait`
+- `package.json` name 필드 동기화
+
+**추가된 기능:**
+- 광고 ID 2종 분리 관리 (`.env.example`, `.env.local`)
+  - `VITE_REWARD_AD_ID`: 재뽑기 리워드 광고 (`ait.v2.live.5c06ff01e75a4884`)
+  - `VITE_BANNER_AD_ID`: 기록 페이지 하단 배너 광고 (`ait.v2.live.41ce280c1bfe4683`)
+- `BannerAd` 컴포넌트 추가 — `HistoryPage` 하단 배너 광고 영역
+- `favicon.ico` 추가 — 분홍 둥근 사각형 + 흰 십자 부적 형상 (16×32×48px)
+- `scripts/generate-favicon.cjs` — favicon 재생성 유틸리티
+- PC 브라우저 스크롤바: 앱 내부 우측 끝 표시 (`scrollbar-gutter: stable`, 4px thin)
+
+**변경된 파일:**
+- `granite.config.ts` — appName 변경
+- `package.json` — name 변경
+- `src/lib/config.ts` — REWARD_AD_ID, BANNER_AD_ID 분리, `BANNER_AD_ID` export 추가
+- `src/components/BannerAd.tsx` + `BannerAd.module.css` — 신규
+- `src/pages/HistoryPage.tsx` — BannerAd 임포트 및 하단 배치
+- `src/pages/HistoryPage.module.css` — `.banner` 클래스 추가
+- `src/index.css` — 스크롤바 스타일 추가
+- `index.html` — favicon 링크 추가
+- `.env.example`, `.env.local` — 광고 ID 2종 추가
+- `public/favicon.ico` — 신규
+
+---
+
 ## [1.1.0] — 2026-05-19
 
 ### 뽑기 애니메이션 추가

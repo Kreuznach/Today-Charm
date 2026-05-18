@@ -67,11 +67,30 @@ svg    { display: block; }
   flex-direction: column;
 }
 
+/* ── Scrollbar: PC 브라우저에서 모바일 컨테이너 우측 끝에 배치, 앱 환경에선 숨김 ── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray-200) transparent;
+}
+*::-webkit-scrollbar { width: 4px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--gray-200);
+  border-radius: 4px;
+}
+
+/* ── App Shell 내부의 스크롤은 컨테이너 우측에 표시 ── */
+.app-shell {
+  overflow: hidden; /* 외부로 스크롤바 넘침 방지 */
+}
+
 /* ── Page Container ──────────────────────────────────── */
 .page {
   flex: 1;
   overflow-y: auto;
   padding: 0 0 80px; /* BottomNav 높이 확보 */
+  /* 스크롤바가 콘텐츠 영역을 침범하지 않도록 */
+  scrollbar-gutter: stable;
 }
 
 /* ── View Transition ─────────────────────────────────── */

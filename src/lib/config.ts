@@ -4,14 +4,20 @@
  */
 import { GoogleAdMob, closeView } from '@apps-in-toss/web-framework';
 
-/** 리워드 광고 그룹 ID (AIT 대시보드에서 발급) */
-const AD_GROUP_ID_PROD = 'ait.v2.live.today-charm-rewarded'; // TODO: 실제 발급 ID로 교체
+/** 리워드 광고 그룹 ID — 재뽑기용 (광고 시청 후 새 부적 뽑기) */
+const REWARD_AD_ID_PROD = import.meta.env.VITE_REWARD_AD_ID ?? 'ait.v2.live.5c06ff01e75a4884';
+
+/** 배너 광고 그룹 ID — 기록 페이지 하단 노출형 배너 */
+export const BANNER_AD_ID_PROD = import.meta.env.VITE_BANNER_AD_ID ?? 'ait.v2.live.41ce280c1bfe4683';
 
 /**
  * Toss Ads 공식 테스트 전용 광고 ID (리워드 광고)
  * 참고: https://developers-apps-in-toss.toss.im/ads/develop.html#테스트하기
  */
 const AD_GROUP_ID_TEST = 'ait-ad-test-rewarded-id';
+
+/** 배너 광고 테스트 ID */
+export const BANNER_AD_ID_TEST = 'ait-ad-test-banner-id';
 
 const _useTestAd = (() => {
   const adEnv = import.meta.env.VITE_AD_ENV;
@@ -20,7 +26,8 @@ const _useTestAd = (() => {
   return import.meta.env.DEV;
 })();
 
-const AD_GROUP_ID = _useTestAd ? AD_GROUP_ID_TEST : AD_GROUP_ID_PROD;
+const AD_GROUP_ID = _useTestAd ? AD_GROUP_ID_TEST : REWARD_AD_ID_PROD;
+export const BANNER_AD_ID = _useTestAd ? BANNER_AD_ID_TEST : BANNER_AD_ID_PROD;
 
 /**
  * 미니앱 종료 — AIT closeView() 호출

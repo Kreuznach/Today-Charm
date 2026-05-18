@@ -140,3 +140,8 @@
   font-size: 14px;
   color: var(--gray-400);
 }
+
+/* 하단 배너 광고 */
+.banner {
+  margin-top: 24px;
+}

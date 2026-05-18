@@ -113,9 +113,23 @@ localStorage
 // production 빌드 → 프로덕션 광고 ID
 // 개발 환경 → mock 반환 (true)
 
-closeApp()     // AIT WebView 닫기
-showRewardAd() // GoogleAdMob 리워드 광고, mock 지원
+closeApp()       // AIT WebView 닫기
+showRewardAd()   // 리워드 광고 (재뽑기용), mock 지원
+BANNER_AD_ID     // 배너 광고 ID export (HistoryPage 하단 배너용)
 ```
+
+**광고 ID 구성:**
+
+| 변수 | 용도 | 프로덕션 ID |
+|------|------|-------------|
+| `VITE_REWARD_AD_ID` | 광고 시청 후 재뽑기 (리워드) | `ait.v2.live.5c06ff01e75a4884` |
+| `VITE_BANNER_AD_ID` | 기록 페이지 하단 배너 (노출형) | `ait.v2.live.41ce280c1bfe4683` |
+
+### 4.6 `src/components/BannerAd.tsx` — 배너 광고 컴포넌트
+
+- AIT 환경: `GoogleAdMob.showAppsInTossBannerAd` 로 배너 삽입
+- 개발/브라우저: placeholder 영역 표시
+- `HistoryPage` 하단에 마운트됨
 
 ---
 
@@ -156,9 +170,11 @@ npm run build
         └── → dist/
 
 npm run build:ait
-  └── granite build
-        └── dist/ → today-charm.ait
+  └── ait build
+        └── dist/ → today-lucky-charm.ait
 ```
+
+> AIT 빌드 결과물: `today-lucky-charm.ait` (appName 기준)
 
 ---
 
