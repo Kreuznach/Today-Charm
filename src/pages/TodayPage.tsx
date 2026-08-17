@@ -102,13 +102,13 @@ export default function TodayPage() {
       <div className={styles.page}>
         <div className={styles.emptyState}>
           <span className={styles.emptyEmoji}>🎴</span>
-          <h2 className={styles.emptyTitle}>오늘의 말랑부적을 뽑아봐요</h2>
+          <h2 className={styles.emptyTitle}>오늘의 말랑부적을 뽑아 봐요</h2>
           <p className={styles.emptyDesc}>
             하루에 한 번 뽑을 수 있어요.
             <br />
-            광고를 보면 한 번 더 뽑을 수 있지만,
+            광고를 보면 한 번 더 뽑을 수 있어요.
             <br />
-            두 번째 결과가 최종 부적이 돼요.
+            다만 두 번째로 나온 부적이 오늘의 부적이 돼요.
           </p>
           <PrimaryButton onClick={handleDraw}>지금 뽑기 🎴</PrimaryButton>
         </div>
@@ -151,9 +151,9 @@ export default function TodayPage() {
       {/* 상태 배지 */}
       <div className={styles.statusBadge}>
         {phase === 'final'
-          ? '✅ 오늘의 최종 부적'
+          ? '✅ 오늘의 부적'
           : phase === 'saved'
-          ? '✅ 저장된 부적 · 한 번 더 뽑을 수 있어요'
+          ? '✅ 저장한 부적 · 한 번 더 뽑을 수 있어요'
           : '🎴 오늘의 말랑부적'}
       </div>
 
@@ -169,7 +169,7 @@ export default function TodayPage() {
         {phase === 'first' && (
           <>
             <PrimaryButton onClick={handleSave}>
-              오늘 부적으로 저장
+              이 부적 저장하기
             </PrimaryButton>
             <PrimaryButton variant="ghost" onClick={handleReroll} loading={adLoading}>
               광고 보고 한 번 더 뽑기
@@ -183,7 +183,7 @@ export default function TodayPage() {
         )}
         {phase === 'final' && (
           <p className={styles.finalNotice}>
-            오늘의 부적은 확정됐어요. 내일 다시 뽑아봐요 🌸
+            오늘은 이 부적으로 할게요. 내일 다시 뽑아 봐요 🌸
           </p>
         )}
       </div>

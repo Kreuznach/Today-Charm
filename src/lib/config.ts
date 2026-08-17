@@ -41,7 +41,7 @@ function _isRewardAdSupported(): boolean {
  * 리워드 광고 표시 (재뽑기용)
  * - AIT 환경: loadAppsInTossAdMob → showAppsInTossAdMob 두 단계로 동작
  *   - loaded: 광고 준비 완료
- *   - userEarnedReward: 보상 획득 확정
+ *   - userEarnedReward: 광고를 끝까지 봄
  *   - dismissed: 광고 종료 (보상 미획득 시 false)
  * - 개발/브라우저: Mock으로 항상 true 반환
  */
@@ -49,7 +49,7 @@ export async function showRewardAd(): Promise<boolean> {
   if (!_isRewardAdSupported()) {
     // 개발 환경 Mock
     await new Promise<void>(r => setTimeout(r, 500));
-    console.log('[Mock] 광고 시청 완료 (개발 환경)');
+    console.log('[연습] 광고를 본 것처럼 처리했습니다. (개발용)');
     return true;
   }
 

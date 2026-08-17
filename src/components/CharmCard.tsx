@@ -62,7 +62,7 @@ export default function CharmCard({ charm, animationType = 'fade' }: CharmCardPr
           <span className={styles.detailValue}>{charm.avoidPoint}</span>
         </li>
         <li>
-          <span className={styles.detailLabel}>행운 포인트</span>
+          <span className={styles.detailLabel}>오늘의 포인트</span>
           <span className={styles.detailValue}>{charm.luckyPoint}</span>
         </li>
       </ul>

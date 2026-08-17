@@ -1,156 +1,177 @@
-너는 React + Vite + TypeScript 기반의 Toss in App WebView 미니앱을 구현하는 프론트엔드 개발자다.
+# 오늘의 말랑부적은 어떤 앱인가요?
 
-프로젝트명은 “오늘의 말랑부적”이다.
+하루에 한 번, 귀여운 부적 카드를 뽑는 작은 앱입니다.
 
-목표:
-하루에 한 번 사용자가 귀여운 부적 카드를 뽑고, 오늘의 응원 메시지와 사용법을 확인하는 Toss in App용 미니앱 MVP를 구현한다.
+진짜 운세, 점, 사주 앱이 아니에요.
+“이 부적을 쓰면 운이 좋아진다”는 말도 하지 않습니다.
+오늘은 조금 더 가볍게 버티자는 응원 카드를 보여 줄 뿐입니다.
 
-핵심 컨셉:
-- 진짜 운세, 점술, 사주, 무속, 효험 앱이 아니다.
-- 하루를 가볍고 귀엽게 버티게 해주는 응원 카드 앱이다.
-- “행운 강화”, “대박”, “효과 업그레이드”, “운명을 바꾼다” 같은 표현은 금지한다.
-- 현금, 포인트, 쿠폰, 경품 등 재산상 이익은 제공하지 않는다.
-- 광고 후 재뽑기는 하루 1회만 가능하다.
-- 두 번째 부적은 오늘의 최종 부적으로 저장된다.
-- 같은 날짜에는 다시 변경할 수 없다.
+앱 이름은 **오늘의 말랑부적**입니다.
+토스 앱 안에서 열리는 미니앱(Apps in Toss)으로 쓸 수 있게 만들어 두었습니다.
 
-기술 스택:
-- React
-- Vite
-- TypeScript
-- React Router 사용 가능
-- CSS Modules 또는 일반 CSS 사용
-- 라이트 모드 기준
-- 모바일 WebView 우선
-- Toss Design System 느낌의 간결하고 둥근 UI
-- localStorage 우선
-- 추후 Apps in Toss Storage 또는 Supabase로 교체 가능하도록 storage layer를 분리한다.
+---
 
-필수 화면:
-1. HomePage
-   - 앱 제목: 오늘의 말랑부적
-   - 오늘 날짜 표시
-   - 안내 문구
-   - “오늘의 말랑부적 뽑기” 버튼
-   - 오늘 이미 뽑았다면 오늘의 최종 부적 보기 버튼
-   - 하단 탭: 오늘 / 기록 / 도감
+## 꼭 지키는 규칙
 
-2. DrawPage 또는 ResultPage
-   - 부적 카드 표시
-   - 부적명
-   - 카테고리
-   - 오늘의 한 줄
-   - 부적 효과
-   - 오늘의 사용법
-   - 피해야 할 것
-   - 행운 포인트
-   - “오늘 부적으로 저장” 버튼
-   - “광고 보고 한 번 더 뽑기” 버튼
-   - 단, 재뽑기는 하루 1회만 가능
-   - 재뽑기 후에는 두 번째 결과를 최종 저장
+- “대박”, “운명을 바꾼다”, “효과가 세진다” 같은 말은 쓰지 않습니다.
+- 돈, 포인트, 쿠폰, 경품은 주지 않습니다.
+- 광고를 보고 다시 뽑기는 **하루에 한 번**만 됩니다.
+- 두 번째로 나온 부적이 오늘의 부적이 됩니다.
+- 같은 날에는 더 이상 바꿀 수 없습니다.
 
-3. HistoryPage
-   - 최근 7일 부적 기록
-   - 날짜, 부적명, 한 줄 메시지 표시
-   - 기록이 없으면 빈 상태 UI 표시
+---
 
-4. CollectionPage
-   - 전체 부적 24종 도감
-   - 획득한 부적은 정상 표시
-   - 미획득 부적은 흐림 또는 실루엣 처리
-   - 획득률 표시
+## 무엇으로 만들었나요?
 
-데이터 구조:
+| 이름 | 하는 일 |
+|------|---------|
+| React | 화면을 조각내어 만드는 도구 |
+| Vite | 개발 서버를 켜고, 완성본을 묶는 도구 |
+| TypeScript | 자료의 모양을 미리 정해 실수를 줄이는 언어 |
+| React Router | 화면 주소를 나누는 도구 (`HashRouter`) |
+| CSS Modules | 화면마다 스타일 이름을 겹치지 않게 쓰는 방법 |
+
+밝은 화면(라이트 모드)만 씁니다.
+휴대폰 화면, 특히 가로 360px ~ 430px에서 보기 좋게 만들었습니다.
+기록은 먼저 브라우저의 `localStorage`에 저장합니다.
+나중에 토스 저장소나 Supabase로 바꿀 수 있게, 저장하는 코드는 [src/lib/storage.ts](../src/lib/storage.ts) 한곳에 모아 두었습니다.
+
+---
+
+## 화면 네 장
+
+아래쪽 탭은 **오늘 / 기록 / 도감**입니다.
+
+### 1. 홈 (`/`, HomePage)
+
+- 앱 이름과 오늘 날짜
+- 아직 안 뽑았으면 **오늘의 말랑부적 뽑기**
+- 이미 뽑았으면 **오늘의 말랑부적 보기**
+
+### 2. 오늘 (`/today`, TodayPage)
+
+부적 카드에는 이런 내용이 있습니다.
+
+- 부적 이름
+- 종류(일상, 소비, 인간관계, 식사, 귀여움)
+- 오늘의 한 줄
+- 부적 효과
+- 오늘 해 볼 일
+- 피하면 좋은 일
+- 오늘의 포인트
+
+버튼은 두 개입니다.
+
+- **이 부적 저장하기**
+- **광고 보고 한 번 더 뽑기**
+
+다시 뽑으면 새 부적이 바로 오늘의 부적으로 저장됩니다.
+
+### 3. 기록 (`/history`, HistoryPage)
+
+최근 7일 동안 뽑은 부적을 보여 줍니다.
+날짜, 이름, 한 줄 메시지가 보입니다.
+기록이 없으면 “아직 뽑은 부적이 없어요”라고 알려 줍니다.
+화면 아래에는 배너 광고 자리가 있습니다.
+
+### 4. 도감 (`/collection`, CollectionPage)
+
+부적 24종이 모여 있습니다.
+이미 뽑은 부적은 이름과 횟수가 보이고, 아직 없는 부적은 자물쇠로 가려 둡니다.
+위에서 몇 개를 모았는지도 보여 줍니다.
+
+---
+
+## 자료는 이렇게 생겼어요
+
+코드에서 쓰는 자료 모양입니다. 어려운 말이 나와도, “이런 칸이 있다” 정도로 보면 됩니다.
+
+- `CharmResult`: 부적 한 장의 정보
+- `DailyCharmRecord`: 하루 동안 뽑은 기록
+- `CharmCollectionItem`: 도감에 모은 횟수
+
+```ts
 type CharmCategory = "daily" | "spending" | "social" | "meal" | "cute";
 type CharmRarity = "basic" | "special" | "seasonal";
 
 type CharmResult = {
-  charmId: string;
-  charmName: string;
+  charmId: string;          // 부적 번호
+  charmName: string;        // 이름
   charmCategory: CharmCategory;
-  charmImageKey: string;
-  rarity: CharmRarity;
-  mainMessage: string;
-  charmEffect: string;
-  todayUsage: string;
-  avoidPoint: string;
-  luckyPoint: string;
+  charmImageKey: string;    // 그림 대신 쓰는 이모지 키
+  rarity: CharmRarity;      // 기본 / 특별 / 시즌
+  mainMessage: string;      // 오늘의 한 줄
+  charmEffect: string;      // 효과 설명
+  todayUsage: string;       // 오늘 해 볼 일
+  avoidPoint: string;       // 피하면 좋은 일
+  luckyPoint: string;       // 오늘의 포인트
 };
 
 type DailyCharmRecord = {
-  date: string;
-  firstCharm?: CharmResult;
-  finalCharm: CharmResult;
-  rerolled: boolean;
-  createdAt: string;
+  date: string;             // 날짜 (한국 시간)
+  firstCharm?: CharmResult; // 처음에 뽑은 부적
+  finalCharm: CharmResult;  // 오늘의 부적
+  rerolled: boolean;        // 다시 뽑았는지
+  createdAt: string;        // 저장한 시각
 };
 
 type CharmCollectionItem = {
   charmId: string;
-  firstAcquiredDate: string;
-  acquiredCount: number;
+  firstAcquiredDate: string; // 처음 뽑은 날
+  acquiredCount: number;     // 몇 번 뽑았는지
 };
+```
 
-부적 24종:
-1. 기상 성공 부적
-2. 집중력 소환 부적
-3. 귀찮음 퇴치 부적
-4. 멘탈 방어 부적
-5. 체력 보존 부적
-6. 잠깨움 부적
-7. 지갑 방어 부적
-8. 충동구매 봉인 부적
-9. 혜택 발견 부적
-10. 카페값 절제 부적
-11. 배달앱 봉인 부적
-12. 구독 정리 부적
-13. 말실수 방지 부적
-14. 답장 용기 부적
-15. 눈치 상승 부적
-16. 회의 생존 부적
-17. 칭찬 수집 부적
-18. 평온한 인간관계 부적
-19. 점심 선택 부적
-20. 저녁 메뉴 결정 부적
-21. 매운맛 조절 부적
-22. 든든한 한 끼 부적
-23. 고양이 기운 부적
-24. 말랑행운 부적
+---
 
-구현 요구사항:
-- / 경로: 홈
-- /today 경로: 오늘 부적 결과
-- /history 경로: 최근 7일 기록
-- /collection 경로: 부적 도감
-- 모바일 우선 360px~430px 화면에서 보기 좋게 구현
-- 전체 배경은 밝은 크림색 또는 연분홍 계열
-- 카드 UI는 둥근 모서리, 부드러운 그림자
-- 버튼은 Toss 스타일처럼 명확하고 큼직하게
-- 애니메이션은 과하지 않게 카드가 살짝 등장하는 정도
-- 이미지가 없어도 charmImageKey 기반으로 CSS/이모지/심볼 대체 UI를 제공
-- 텍스트는 한국어로 작성
-- 광고 API는 showRewardAd() 함수로 추상화하고, 현재는 mock으로 true 반환
-- storage.ts 파일을 만들어 localStorage 접근을 모듈화
-- charms.ts 파일에 24종 결과 사전을 작성
-- date.ts 파일에 KST 기준 날짜 유틸을 작성
-- README.md에 실행 방법, 빌드 방법, Toss in App 배포 시 고려사항을 정리
+## 부적 24종
 
-금지:
-- SSR, 확률, 등급업 같은 표현 금지
-- 금전 보상 암시 금지
-- 실제 효험/점술 암시 금지
-- 어두운 무속/종교적 이미지 금지
+| 번호 | 이름 | 종류 |
+|------|------|------|
+| 1 | 기상 성공 부적 | 일상 |
+| 2 | 집중력 소환 부적 | 일상 |
+| 3 | 귀찮음 퇴치 부적 | 일상 |
+| 4 | 멘탈 방어 부적 | 일상 |
+| 5 | 체력 보존 부적 | 일상 |
+| 6 | 잠깨움 부적 | 일상 |
+| 7 | 지갑 방어 부적 | 소비 |
+| 8 | 충동구매 봉인 부적 | 소비 |
+| 9 | 혜택 발견 부적 | 소비 |
+| 10 | 카페값 절제 부적 | 소비 |
+| 11 | 배달앱 봉인 부적 | 소비 |
+| 12 | 구독 정리 부적 | 소비 |
+| 13 | 말실수 방지 부적 | 인간관계 |
+| 14 | 답장 용기 부적 | 인간관계 |
+| 15 | 눈치 상승 부적 | 인간관계 |
+| 16 | 회의 생존 부적 | 인간관계 |
+| 17 | 칭찬 수집 부적 | 인간관계 |
+| 18 | 평온한 인간관계 부적 | 인간관계 |
+| 19 | 점심 선택 부적 | 식사 |
+| 20 | 저녁 메뉴 결정 부적 | 식사 |
+| 21 | 매운맛 조절 부적 | 식사 |
+| 22 | 든든한 한 끼 부적 | 식사 |
+| 23 | 고양이 기운 부적 | 귀여움 |
+| 24 | 말랑행운 부적 | 귀여움 |
 
-최종 산출물:
-- 실행 가능한 React + Vite + TypeScript 프로젝트
-- src/data/charms.ts
-- src/lib/storage.ts
-- src/lib/date.ts
-- src/pages/HomePage.tsx
-- src/pages/TodayPage.tsx
-- src/pages/HistoryPage.tsx
-- src/pages/CollectionPage.tsx
-- src/components/CharmCard.tsx
-- src/components/BottomNav.tsx
-- src/components/PrimaryButton.tsx
-- README.md
+---
+
+## 만들 때 지킨 것
+
+- 글은 한국어로 씁니다.
+- 배경은 밝은 크림색, 연분홍입니다.
+- 카드는 모서리가 둥글고, 그림자가 부드럽습니다.
+- 버튼은 크고 잘 보이게 만듭니다.
+- 카드가 나타날 때 살짝만 움직이게 합니다.
+- 사진이 없어도 이모지로 부적을 보여 줍니다.
+- 광고는 `showRewardAd()` 한곳으로 모았습니다. 컴퓨터 브라우저에서는 연습용으로 `true`가 나옵니다.
+- 날짜는 한국 시간(KST)을 씁니다.
+
+쓰지 않는 말:
+
+- 확률, 등급 올리기
+- 돈을 준다는 말
+- 진짜로 효험이 있다는 말
+- 어둡고 무서운 무속·종교 그림
+
+코드가 어디에 있는지는 [ARCHITECTURE.md](ARCHITECTURE.md)를 보세요.
+실행하는 방법은 [../README.md](../README.md)를 보세요.

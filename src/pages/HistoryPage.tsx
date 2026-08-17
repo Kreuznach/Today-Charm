@@ -31,7 +31,7 @@ export default function HistoryPage() {
         <div className={styles.empty}>
           <span className={styles.emptyEmoji}>📭</span>
           <p className={styles.emptyText}>아직 뽑은 부적이 없어요.</p>
-          <p className={styles.emptySubText}>오늘의 말랑부적을 뽑아보세요!</p>
+          <p className={styles.emptySubText}>오늘의 말랑부적을 뽑아 보세요.</p>
         </div>
       ) : (
         <ul className={styles.list}>
@@ -62,7 +62,7 @@ export default function HistoryPage() {
                 ) : (
                   <div className={styles.emptyRecord}>
                     <span className={styles.emptyRecordIcon}>🌙</span>
-                    <span className={styles.emptyRecordText}>기록 없음</span>
+                    <span className={styles.emptyRecordText}>아직 없어요</span>
                   </div>
                 )}
               </li>
@@ -71,6 +71,7 @@ export default function HistoryPage() {
         </ul>
       )}
       {/* 하단 배너 광고 */}
-      <BannerAd className={styles.banner} />    </div>
+      <BannerAd className={styles.banner} />
+    </div>
   );
 }

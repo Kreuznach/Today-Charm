@@ -1,201 +1,184 @@
-# 아키텍처 문서 — 오늘의 말랑부적
+# 코드가 어떻게 나뉘어 있나요?
 
-## 1. 프로젝트 개요
+이 문서는 **오늘의 말랑부적** 코드가 어디에 있고, 어떻게 이어지는지 설명합니다.
+프로그래밍을 조금 아는 사람이면 따라올 수 있게 썼어요.
 
 | 항목 | 값 |
 |------|-----|
-| 서비스명 | 오늘의 말랑부적 |
-| 앱 ID | today-lucky-charm |
-| 플랫폼 | Toss in App (AIT) Mini-App |
-| 기술 스택 | React 18 + Vite 6 + TypeScript 5 |
+| 앱 이름 | 오늘의 말랑부적 |
+| 앱 ID | `today-lucky-charm` |
+| 어디서 열리나 | 토스 앱 안 웹뷰 (AIT) |
+| 만든 도구 | React 18 + Vite 6 + TypeScript 5 |
 
 ---
 
-## 2. 디렉터리 구조
+## 2. 폴더는 이렇게 나뉩니다
 
 ```
 today-lucky-charm/
 ├── src/
-│   ├── types/
-│   │   └── charm.ts          # 공유 TypeScript 타입 정의
-│   ├── data/
-│   │   └── charms.ts         # 부적 24종 데이터 & 유틸리티
+│   ├── types/charm.ts            # 자료 모양
+│   ├── data/charms.ts            # 부적 24종
 │   ├── lib/
-│   │   ├── date.ts           # KST 날짜 유틸리티
-│   │   ├── storage.ts        # localStorage 추상화 레이어
-│   │   └── config.ts         # AIT SDK 래퍼 (광고 추상화)
+│   │   ├── date.ts               # 한국 시간 날짜
+│   │   ├── storage.ts            # 브라우저 저장
+│   │   └── config.ts             # 광고, 앱 닫기
 │   ├── components/
-│   │   ├── PrimaryButton.tsx / .module.css
-│   │   ├── BottomNav.tsx / .module.css
-│   │   └── CharmCard.tsx / .module.css
-│   ├── pages/
-│   │   ├── HomePage.tsx / .module.css      # /
-│   │   ├── TodayPage.tsx / .module.css     # /today
-│   │   ├── HistoryPage.tsx / .module.css   # /history
-│   │   └── CollectionPage.tsx / .module.css # /collection
-│   ├── App.tsx               # 라우팅 진입점 (HashRouter)
-│   ├── main.tsx              # React 마운트
-│   └── index.css             # 글로벌 CSS (CSS 변수 정의)
-├── docs/                     # 운영/개발 문서
-│   ├── INTRODUCTION.md       # 서비스 기획 문서
-│   ├── ARCHITECTURE.md       # 현재 파일
-│   ├── DEPLOYMENT.md         # 배포 가이드
-│   └── CHANGELOG.md          # 변경 이력
-├── granite.config.ts         # AIT 미니앱 설정
-├── vite.config.ts            # Vite 빌드 설정
-├── tsconfig.json             # TypeScript 설정
-├── package.json
-└── .gitignore
+│   │   ├── PrimaryButton.tsx
+│   │   ├── BottomNav.tsx
+│   │   ├── CharmCard.tsx
+│   │   └── BannerAd.tsx
+│   ├── pages/                    # 화면 네 장
+│   ├── App.tsx                   # 화면 연결
+│   ├── main.tsx                  # 앱을 화면에 붙이는 시작점
+│   └── index.css                 # 공통 색과 레이아웃
+├── docs/                         # 설명 문서
+├── granite.config.ts             # 토스 미니앱 설정
+├── vite.config.ts                # 빌드 설정
+└── package.json
 ```
 
 ---
 
-## 3. 화면 구조 & 라우팅
+## 3. 화면은 어떻게 이어지나요?
 
 ```
 HashRouter
-├── / → HomePage
-│         홈 화면 (날짜, 오늘 상태, 뽑기 CTA)
-├── /today → TodayPage
-│         오늘 부적 뽑기 (Phase State Machine)
-├── /history → HistoryPage
-│         최근 7일 기록
-└── /collection → CollectionPage
-          부적 24종 도감
+├── /            → HomePage        홈
+├── /today       → TodayPage       뽑기와 결과
+├── /history     → HistoryPage     최근 7일
+└── /collection  → CollectionPage  도감
 ```
 
-> **HashRouter 선택 이유**: `.ait` WebView 환경에서 BrowserRouter의 HTML5 History API가 동작하지 않기 때문에 HashRouter를 사용합니다.
+주소 앞에 `#`이 붙는 `HashRouter`를 씁니다.
+토스 웹뷰에서는 일반 브라우저처럼 주소를 바꾸기 어려워서, `#` 뒤만 바꿉니다.
 
 ---
 
-## 4. 핵심 모듈 상세
+## 4. 중요한 파일
 
-### 4.1 `src/types/charm.ts` — 타입 정의
+### 4.1 [src/types/charm.ts](../src/types/charm.ts) — 자료 모양
 
 ```typescript
 type CharmCategory = 'daily' | 'spending' | 'social' | 'meal' | 'cute'
 type CharmRarity = 'basic' | 'special' | 'seasonal'
 
-interface CharmResult { ... }      // 부적 1종의 전체 데이터
-interface DailyCharmRecord { ... } // 하루치 뽑기 기록
-interface CharmCollectionItem { ... } // 도감 수집 현황
+interface CharmResult { ... }         // 부적 한 장
+interface DailyCharmRecord { ... }    // 하루 기록
+interface CharmCollectionItem { ... } // 도감 한 칸
 ```
 
-### 4.2 `src/data/charms.ts` — 부적 데이터
+### 4.2 [src/data/charms.ts](../src/data/charms.ts) — 부적 목록
 
-- `CHARMS`: 24종 부적 배열
-- `drawRandomCharm(excludeId?)`: 가중치 없는 랜덤 뽑기 (재뽑기 시 이전 부적 제외)
-- `getCategoryEmoji()`, `getCategoryLabel()`, `getCharmEmoji()`: 렌더링 헬퍼
+- `CHARMS`: 부적 24장
+- `drawRandomCharm(excludeId?)`: 아무거나 하나 뽑기. 다시 뽑을 때는 방금 나온 부적은 빼요.
+- `getCategoryEmoji()`, `getCategoryLabel()`, `getCharmEmoji()`: 화면에 이모지를 붙이는 도우미
 
-### 4.3 `src/lib/date.ts` — KST 날짜
+### 4.3 [src/lib/date.ts](../src/lib/date.ts) — 한국 시간
 
-- 외부 라이브러리 없이 UTC+9 오프셋을 수동 적용
-- `getTodayKST()` → `'YYYY-MM-DD'` 형식의 당일 KST 날짜
-- 일별 날짜 키로 localStorage 레코드를 식별
+다른 날짜 라이브러리는 쓰지 않습니다.
+지금 시각에 9시간을 더해 한국 날짜(`YYYY-MM-DD`)를 만듭니다.
+이 날짜가 저장소의 열쇠입니다.
 
-### 4.4 `src/lib/storage.ts` — 스토리지 레이어
+### 4.4 [src/lib/storage.ts](../src/lib/storage.ts) — 저장소
 
 ```
 localStorage
-├── 'charm_records'     → DailyCharmRecord[]  (날짜별 뽑기 기록)
-└── 'charm_collection'  → CharmCollectionItem[] (누적 도감 데이터)
+├── 'charm_records'     → 날짜별 뽑기 기록
+└── 'charm_collection'  → 도감
 ```
 
-`saveTodayRecord()` 호출 시 `updateCollection()` 을 내부적으로 호출하여 도감 동기화.
+`saveTodayRecord()`를 부르면 도감도 같이 고칩니다.
+나중에 저장 방식을 바꿔도, 이 파일의 함수 이름만 같으면 화면 코드는 거의 안 건드려도 됩니다.
 
-> **설계 의도**: 인터페이스 레이어로 추상화되어 있어 향후 Supabase 또는 Apps in Toss Storage 로 교체 시 이 파일만 수정하면 됩니다.
+### 4.5 [src/lib/config.ts](../src/lib/config.ts) — 광고와 앱 닫기
 
-### 4.5 `src/lib/config.ts` — AIT SDK 래퍼
+항상 실제 광고 ID를 씁니다. 테스트용 ID로 나누지 않습니다.
+컴퓨터 브라우저처럼 토스 SDK가 없으면, 광고는 연습용으로 성공한 것처럼 처리합니다.
 
-```typescript
-// 항상 프로덕션 광고 ID 사용 (테스트/프로덕션 분기 없음)
-// AIT 미지원 환경(개발/브라우저)에서는 리워드 광고 Mock 반환
+| 이름 | 하는 일 |
+|------|---------|
+| `closeApp()` | 미니앱 닫기 |
+| `showRewardAd()` | 다시 뽑기용 광고 |
+| `REWARD_AD_ID` | 다시 뽑기 광고 ID |
+| `BANNER_AD_ID` | 배너 광고 ID |
+| `isBannerAdSupported()` | 배너를 붙일 수 있는지 |
 
-closeApp()              // AIT WebView 닫기
-showRewardAd()          // 리워드 광고 (재뽑기용), mock 지원
-REWARD_AD_ID            // 리워드 광고 ID export
-BANNER_AD_ID            // 배너 광고 ID export
-isBannerAdSupported()   // TossAds.attachBanner.isSupported() 래퍼
-```
+| 환경 변수 | 쓰는 곳 |
+|-----------|---------|
+| `VITE_REWARD_AD_ID` | 광고 보고 다시 뽑기 |
+| `VITE_BANNER_AD_ID` | 기록 화면 아래 배너 |
 
-**광고 ID 구성:**
+### 4.6 [src/components/BannerAd.tsx](../src/components/BannerAd.tsx) — 배너
 
-| 환경변수 | 용도 | 기본값 (프로덕션 ID) |
-|----------|------|---------------------|
-| `VITE_REWARD_AD_ID` | 광고 시청 후 재뽑기 (리워드) | `ait.v2.live.5c06ff01e75a4884` |
-| `VITE_BANNER_AD_ID` | 기록 페이지 하단 배너 (노출형) | `ait.v2.live.41ce280c1bfe4683` |
-
-### 4.6 `src/components/BannerAd.tsx` — 배너 광고 컴포넌트
-
-- AIT 환경: `TossAds.attachBanner(adGroupId, target, options)` 로 배너 삽입
-  - `onAdFailedToRender` / `onNoFill` 콜백 → 광고 영역 자동 숨김
-  - cleanup: `result.destroy()` 호출 (컴포넌트 언마운트 시)
-- 개발/브라우저: placeholder 영역 표시
-- `HistoryPage` 하단에 마운트됨
+토스 안에서는 `TossAds.attachBanner`로 배너를 붙입니다.
+광고가 안 나오면 자리를 숨깁니다.
+화면이 사라질 때 `destroy()`로 정리합니다.
+컴퓨터 브라우저에서는 “광고 자리”만 보여 줍니다.
+기록 화면 아래에 붙어 있습니다.
 
 ---
 
-## 5. TodayPage 상태 머신
+## 5. 오늘 화면의 상태
+
+`TodayPage`는 지금 어느 단계인지 `phase`로 기억합니다.
 
 ```
-'idle'
-  ↓ handleDraw() — 즉시
-'drawing' (뽑기 로딩 화면, 1200ms)
-  ↓ setTimeout 완료
-'first' (첫 뽑기 완료, animationType='reveal')
-  ├── "저장" → 'saved' (finalCharm = firstCharm, rerolled: false)
-  └── "광고 보고 한 번 더" → showRewardAd() → 'rerolling' (800ms)
-'saved'
-  └── "광고 보고 한 번 더" → showRewardAd() → 'rerolling' (800ms)
-'rerolling' (재뽑기 로딩 화면, 800ms)
-  ↓ setTimeout 완료
-'final' (재뽑기 완료, animationType='burst', 더 이상 행동 없음)
+idle          아직 안 뽑음
+  ↓ 뽑기
+drawing       1.2초 동안 뽑는 중
+  ↓
+first         첫 부적. 저장하거나 다시 뽑기
+  ├── 저장 → saved
+  └── 광고  → rerolling
+saved         저장함. 그래도 한 번 더 뽑을 수 있음
+  └── 광고  → rerolling
+rerolling     0.8초 동안 다시 찾는 중
+  ↓
+final         오늘의 부적. 더 이상 못 바꿈
 ```
 
-### 애니메이션 상세
-
-| Phase 전환 | 로딩 화면 | 카드 등장 |
-|------------|----------|----------|
-| idle → drawing → first | 🎴 회전+펄스 (1200ms) | `reveal`: 위에서 내려오며 스프링 |
-| first/saved → rerolling → final | ✨ Y축 회전+글로우 (800ms) | `burst`: 중심에서 확대+회전 |
-| 기타(히스토리·도감) | — | `fade`: 아래에서 페이드인 |
+| 언제 | 기다리는 화면 | 카드가 나타나는 방법 |
+|------|---------------|----------------------|
+| 처음 뽑을 때 | 🎴 1.2초 | `reveal` 위에서 내려옴 |
+| 다시 뽑을 때 | ✨ 0.8초 | `burst` 가운데에서 커짐 |
+| 그 외 | 없음 | `fade` 아래에서 서서히 |
 
 ---
 
-## 6. 빌드 파이프라인
+## 6. 완성본을 만드는 방법
 
 ```
 npm run build
-  └── vite build
-        ├── base: './'
-        ├── manualChunks: undefined (단일 번들)
-        └── → dist/
+  └── vite가 dist/ 폴더를 만듭니다.
+      JS와 CSS는 되도록 한 파일로 묶습니다.
 
 npm run build:ait
-  └── ait build
-        └── dist/ → today-lucky-charm.ait
+  └── dist/를 today-lucky-charm.ait 로 묶습니다.
 ```
 
-> AIT 빌드 결과물: `today-lucky-charm.ait` (appName 기준)
+파일 이름은 [granite.config.ts](../granite.config.ts)의 `appName`을 따릅니다.
 
 ---
 
-## 7. 색상 팔레트 (CSS 변수)
+## 7. 색깔
 
-| 변수 | 값 | 용도 |
-|------|----|------|
-| `--pink` | `#FF8FAB` | 메인 포인트 색상 |
-| `--pink-dark` | `#E0637E` | 그림자, hover |
-| `--pink-light` | `#FFD6E0` | 배경, secondary |
+공통 색은 [src/index.css](../src/index.css)의 CSS 변수입니다.
+
+| 변수 | 값 | 쓰는 곳 |
+|------|----|---------|
+| `--pink` | `#FF8FAB` | 중요한 색 |
+| `--pink-dark` | `#E0637E` | 그림자, 손가락을 올렸을 때 |
+| `--pink-light` | `#FFD6E0` | 연한 배경 |
 | `--cream` | `#FFF8F0` | 앱 배경 |
-| `--text-main` | `#3D2B1F` | 본문 텍스트 |
-| `--text-sub` | `#8B7355` | 보조 텍스트 |
+| `--text-main` | `#3D2B1F` | 본문 |
+| `--text-sub` | `#8B7355` | 보조 글 |
 
 ---
 
-## 8. 보안 고려사항
+## 8. 안전하게 지키려는 것
 
-- **개인정보 없음**: localStorage에 부적 기록만 저장, 사용자 식별 정보 없음
-- **광고 ID 관리**: 항상 프로덕션 광고 ID 사용; 환경변수(`VITE_REWARD_AD_ID`, `VITE_BANNER_AD_ID`)로 오버라이드 가능
-- **XSS 방지**: 모든 렌더링은 React JSX를 통해 자동 이스케이프
-- **외부 네트워크 없음**: 모든 데이터는 로컬, API 호출 없음
+- 이름, 전화번호 같은 개인정보는 저장하지 않습니다. 부적 기록만 남깁니다.
+- 광고 ID는 코드에 있는 실제 ID를 쓰되, 환경 변수로 바꿀 수 있습니다.
+- 화면에 글자를 그릴 때는 React JSX를 써서, 이상한 코드가 그대로 실행되지 않게 합니다.
+- 부적 데이터는 앱 안에 들어 있습니다. 기록을 위해 다른 서버로 보내지 않습니다.

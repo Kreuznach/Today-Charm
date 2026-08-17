@@ -1,59 +1,71 @@
-# 변경 이력 (CHANGELOG)
+# 무엇이 바뀌었나요?
+
+이 파일은 버전이 올라갈 때마다 무엇을 고쳤는지 적습니다.
+위에서부터 가장 최근 내용입니다.
+
+## [1.3.1] — 2026-08-17
+
+### 한글을 더 자연스럽게, 문서를 더 쉽게
+
+**화면 글**
+
+- “오늘의 부적은 확정됐어요”처럼 딱딱한 말을 고쳤습니다.
+- 홈, 오늘, 기록, 도감 안내 글을 사람이 말하는 말투에 가깝게 다듬었습니다.
+- 부적 설명에서 존댓말과 안내문이 어색하게 섞인 문장을 고쳤습니다.
+- 카드의 “행운 포인트”를 “오늘의 포인트”로 바꿨습니다.
+
+**문서**
+
+- [README.md](../README.md), [INTRODUCTION.md](INTRODUCTION.md), [ARCHITECTURE.md](ARCHITECTURE.md), [DEPLOYMENT.md](DEPLOYMENT.md)를 다시 썼습니다.
+- 프로그래밍을 조금 아는 초등 고학년도 읽을 수 있게 쉬운 말로 설명했습니다.
+- 예전 앱 ID(`today-charm`)와 `VITE_AD_ENV` 안내를 지금 코드에 맞게 고쳤습니다.
+
+**바뀐 파일**
+
+- `src/pages/HomePage.tsx`, `TodayPage.tsx`, `HistoryPage.tsx`, `CollectionPage.tsx`
+- `src/components/CharmCard.tsx`
+- `src/data/charms.ts`
+- `README.md`, `docs/*.md`
+
+---
 
 ## [1.3.0] — 2026-05-18
 
-### 광고 API 수정 — 실제 프로덕션 ID 및 올바른 배너 API
+### 광고를 올바른 방식으로 고침
 
-**변경된 사항:**
-- `src/lib/config.ts`: 테스트 광고 ID(`ait-ad-test-*`) 및 `VITE_AD_ENV` 환경 변수 기반 분기 완전 제거
-  - 항상 프로덕션 ID 사용 (`VITE_REWARD_AD_ID` / `VITE_BANNER_AD_ID` 또는 하드코딩 기본값)
-  - `REWARD_AD_ID_PROD`, `BANNER_AD_ID_PROD`, `AD_GROUP_ID_TEST`, `BANNER_AD_ID_TEST`, `_useTestAd` 제거
-  - `isBannerAdSupported()` 함수 export 추가 (`TossAds.attachBanner.isSupported()` 래퍼)
-- `src/components/BannerAd.tsx`: 잘못된 API(`GoogleAdMob.showAppsInTossBannerAd`) → 올바른 API(`TossAds.attachBanner`) 로 전면 교체
-  - `onAdFailedToRender` / `onNoFill` 콜백 처리 — 광고 미채움 시 컴포넌트 자동 숨김(`setHidden(true)`)
-  - cleanup: `result.destroy()` 호출 (컴포넌트 언마운트 시)
-- `.env.example`, `.env.local`: `VITE_AD_ENV` 항목 제거 (더 이상 사용하지 않음)
-- `docs/ARCHITECTURE.md`: 섹션 1·2·4.5·4.6·8 최신화
+**무엇을 바꿨나**
 
-**변경된 파일:**
-- `src/lib/config.ts` — test ID 제거, `isBannerAdSupported` export 추가
-- `src/components/BannerAd.tsx` — `TossAds.attachBanner` API 로 전면 교체
-- `.env.example` — `VITE_AD_ENV` 제거
-- `.env.local` — `VITE_AD_ENV` 제거
-- `docs/ARCHITECTURE.md` — 최신화
-- `today-lucky-charm.ait` — 클린 빌드
+- 테스트용 광고 ID와 `VITE_AD_ENV`로 나누던 코드를 없앴습니다. 이제 실제 광고 ID만 씁니다.
+- 배너가 잘못된 함수를 부르던 것을 `TossAds.attachBanner`로 바꿨습니다.
+- 광고가 안 나오면 배너 자리를 숨깁니다.
+- 화면이 사라질 때 `destroy()`로 배너를 정리합니다.
+
+**바뀐 파일**
+
+- [src/lib/config.ts](../src/lib/config.ts)
+- [src/components/BannerAd.tsx](../src/components/BannerAd.tsx)
+- [.env.example](../.env.example)
+- [docs/ARCHITECTURE.md](ARCHITECTURE.md)
 
 ---
 
 ## [1.2.0] — 2026-05-18
 
-### 앱 ID 변경 및 UX/광고 개선
+### 앱 ID를 바꾸고, 광고 자리를 나눔
 
-**변경된 사항:**
-- `appName`: `today-charm` → `today-lucky-charm` (AIT 중복 등록 방지)
-- 빌드 결과물: `today-charm.ait` → `today-lucky-charm.ait`
-- `package.json` name 필드 동기화
+**무엇을 바꿨나**
 
-**추가된 기능:**
-- 광고 ID 2종 분리 관리 (`.env.example`, `.env.local`)
-  - `VITE_REWARD_AD_ID`: 재뽑기 리워드 광고 (`ait.v2.live.5c06ff01e75a4884`)
-  - `VITE_BANNER_AD_ID`: 기록 페이지 하단 배너 광고 (`ait.v2.live.41ce280c1bfe4683`)
-- `BannerAd` 컴포넌트 추가 — `HistoryPage` 하단 배너 광고 영역
-- `favicon.ico` 추가 — 분홍 둥근 사각형 + 흰 십자 부적 형상 (16×32×48px)
-- `scripts/generate-favicon.cjs` — favicon 재생성 유틸리티
-- PC 브라우저 스크롤바: 앱 내부 우측 끝 표시 (`scrollbar-gutter: stable`, 4px thin)
+- 앱 ID를 `today-charm`에서 `today-lucky-charm`으로 바꿨습니다. 같은 이름이 겹치지 않게 하려는 것입니다.
+- 완성 파일 이름도 `today-lucky-charm.ait`가 됩니다.
+- 다시 뽑기 광고와 배너 광고 ID를 따로 두었습니다.
+- 기록 화면 아래에 배너를 넣었습니다.
+- 분홍 바탕의 작은 아이콘(`favicon.ico`)을 만들었습니다.
 
-**변경된 파일:**
-- `granite.config.ts` — appName 변경
-- `package.json` — name 변경
-- `src/lib/config.ts` — REWARD_AD_ID, BANNER_AD_ID 분리, `BANNER_AD_ID` export 추가
-- `src/components/BannerAd.tsx` + `BannerAd.module.css` — 신규
-- `src/pages/HistoryPage.tsx` — BannerAd 임포트 및 하단 배치
-- `src/pages/HistoryPage.module.css` — `.banner` 클래스 추가
-- `src/index.css` — 스크롤바 스타일 추가
-- `index.html` — favicon 링크 추가
-- `.env.example`, `.env.local` — 광고 ID 2종 추가
-- `public/favicon.ico` — 신규
+**바뀐 파일**
+
+- [granite.config.ts](../granite.config.ts), [package.json](../package.json)
+- [src/lib/config.ts](../src/lib/config.ts), [src/components/BannerAd.tsx](../src/components/BannerAd.tsx)
+- [src/pages/HistoryPage.tsx](../src/pages/HistoryPage.tsx)
 
 ---
 
@@ -71,36 +83,31 @@
 
 **변경된 파일:**
 - `src/components/CharmCard.tsx` — `animate` prop → `animationType` prop
-- `src/components/CharmCard.module.css` — `.reveal`, `.burst` 키프레임 추가
-- `src/pages/TodayPage.tsx` — Phase 타입 확장, handleDraw/handleReroll setTimeout 로직
-- `src/pages/TodayPage.module.css` — `.drawingState`, `.drawingCard`, `.rerollingCard`, `.drawingText`, `.dots` 추가
+- `sr을 때 움직이는 화면
 
----
+**무엇을 넣었나**
 
-## [1.0.0] — 2026-05-18
+- 처음 뽑으면 1.2초 동안 🎴가 돌아갑니다.
+- 다시 뽑으면 0.8초 동안 ✨가 반짝입니다.
+- 카드가 나타나는 방법이 세 가지입니다. 위에서 내려오기, 가운데에서 커지기, 아래에서 서서히 나타나기.
 
-### 최초 MVP 릴리즈
+**바뀐처음 만든 버전
 
-**추가된 기능:**
-- 홈 화면 (오늘 날짜, 뽑기 버튼, 상태 표시)
-- 오늘 부적 뽑기 화면 (CharmCard, 저장, 재뽑기)
-- 최근 7일 기록 화면 (HistoryPage)
-- 부적 24종 도감 (CollectionPage)
-- 하단 탭 네비게이션 (BottomNav)
-- localStorage 기반 스토리지 레이어 (storage.ts)
-- KST 기준 날짜 유틸 (date.ts)
-- Toss in App SDK 연동 (GoogleAdMob 리워드 광고 추상화)
-- 광고 mock 지원 (개발 환경에서 자동 true 반환)
-- 부적 24종 데이터 (charms.ts)
+**무엇이 있었나**
 
-**기술 스택:**
+- 홈, 오늘, 기록, 도감 화면
+- 아래쪽 탭
+- 브라우저에 기록을 남기는 저장소
+- 한국 시간 날짜
+- 토스 광고를 부르는 자리 (컴퓨터에서는 연습용)
+- 부적 24종
+
+**만든 도구**
+
 - React 18 + Vite 6 + TypeScript 5
-- React Router v6 (HashRouter)
+- React Router v6 (`HashRouter`)
 - CSS Modules
-- @apps-in-toss/web-framework ^2.1.0
-
-**부적 24종 목록:**
-| # | 이름 | 카테고리 | 희귀도 |
+- `@apps-in-toss/web-framework`
 |---|------|--------|--------|
 | 1 | 기상 성공 부적 | 일상 | 기본 |
 | 2 | 집중력 소환 부적 | 일상 | 기본 |
@@ -134,5 +141,10 @@
 - [ ] Supabase 또는 Apps in Toss Storage 마이그레이션
 - [ ] 부적 공유 기능 (Toss 친구에게 공유)
 - [ ] 시즌 한정 부적 추가 (계절별)
-- [ ] 연속 뽑기 기록 뱃지
-- [ ] 실제 이미지 에셋 추가
+- [나중에 하고 싶은 일
+
+- [ ] 브라우저 저장 대신 토스 저장소나 Supabase 쓰기
+- [ ] 부적을 토스 친구에게 보내기
+- [ ] 계절마다 다른 부적 넣기
+- [ ] 여러 날 연속으로 뽑으면 작은 표시 주기
+- [ ] 이모지 대신 진짜 그림 넣기

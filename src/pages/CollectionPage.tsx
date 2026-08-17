@@ -24,10 +24,10 @@ export default function CollectionPage() {
     <div className={styles.page}>
       <h1 className={styles.title}>부적 도감</h1>
 
-      {/* 획득률 */}
+      {/* 모은 부적 */}
       <div className={styles.progress}>
         <div className={styles.progressHeader}>
-          <span className={styles.progressLabel}>획득률</span>
+          <span className={styles.progressLabel}>모은 부적</span>
           <span className={styles.progressValue}>{acquiredCount} / {total}</span>
         </div>
         <div className={styles.progressBar}>
@@ -53,7 +53,7 @@ export default function CollectionPage() {
                 {acquired ? charm.charmName : '???'}
               </span>
               {acquired && item && (
-                <span className={styles.cellCount}>{item.acquiredCount}회</span>
+                <span className={styles.cellCount}>{item.acquiredCount}번</span>
               )}
               {acquired && (
                 <span className={styles.categoryTag}>

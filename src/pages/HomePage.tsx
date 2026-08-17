@@ -34,18 +34,18 @@ export default function HomePage() {
           /* 이미 뽑은 경우 */
           <>
             <div className={styles.heroEmoji}>✅</div>
-            <h2 className={styles.heroTitle}>오늘의 부적이 준비됐어요!</h2>
+            <h2 className={styles.heroTitle}>오늘 뽑은 부적이 있어요</h2>
             <p className={styles.heroDesc}>
-              오늘의 말랑부적은 <strong>{record.finalCharm.charmName}</strong>이에요.
+              오늘은 <strong>{record.finalCharm.charmName}</strong>이에요.
             </p>
           </>
         ) : (
           /* 아직 안 뽑은 경우 */
           <>
             <div className={styles.heroEmoji}>🎴</div>
-            <h2 className={styles.heroTitle}>오늘의 부적을 뽑아봐요</h2>
+            <h2 className={styles.heroTitle}>오늘의 부적을 뽑아 봐요</h2>
             <p className={styles.heroDesc}>
-              하루에 한 번, 오늘 하루를 가볍고 귀엽게 버틸 수 있는 부적을 뽑아보세요.
+              하루에 한 번, 오늘을 가볍고 귀엽게 버틸 부적을 뽑아 보세요.
             </p>
           </>
         )}
@@ -66,7 +66,7 @@ export default function HomePage() {
 
       {/* 안내 문구 */}
       <p className={styles.notice}>
-        ✦ 하루 한 번 뽑을 수 있어요 · 광고 보고 한 번 더 뽑기 가능
+        ✦ 하루 한 번 뽑을 수 있어요 · 광고를 보면 한 번 더 뽑을 수도 있어요
       </p>
     </div>
   );
