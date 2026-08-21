@@ -154,3 +154,4 @@ getCollection()
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — 코드가 어떻게 나뉘어 있는지
 - [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) — 빌드하고 올리는 방법
 - [docs/CHANGELOG.md](docs/CHANGELOG.md) — 지금까지 바뀐 내용
+- [docs/IMPROVEMENT_PLAN.md](docs/IMPROVEMENT_PLAN.md) — 디자인·유입·재방문 맹점과 개발 계획

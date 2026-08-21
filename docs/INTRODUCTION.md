@@ -175,3 +175,4 @@ type CharmCollectionItem = {
 
 코드가 어디에 있는지는 [ARCHITECTURE.md](ARCHITECTURE.md)를 보세요.
 실행하는 방법은 [../README.md](../README.md)를 보세요.
+디자인·유입·재방문의 약한 점과 고치는 순서는 [IMPROVEMENT_PLAN.md](IMPROVEMENT_PLAN.md)를 보세요.
