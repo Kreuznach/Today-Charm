@@ -65,6 +65,7 @@ npm run build:ait
 | `/collection` | CollectionPage | 부적 24종 도감 |
 
 아래쪽 탭은 **오늘 / 기록 / 도감**입니다.
+모양은 화면 아래에 붙은 긴 막대가 아니라, 떠 있는 **둥근 알약**입니다.
 
 주소가 `#/`처럼 보이는 이유는 `HashRouter`를 쓰기 때문입니다.
 토스 안의 웹뷰에서는 일반 브라우저처럼 주소를 바꾸기 어려워서, `#` 뒤의 주소를 사용합니다.
@@ -85,7 +86,7 @@ src/
 │   └── config.ts            # 광고와 앱 닫기
 ├── components/
 │   ├── PrimaryButton.tsx    # 큰 버튼
-│   ├── BottomNav.tsx        # 아래쪽 탭
+│   ├── BottomNav.tsx        # 떠 있는 알약 탭바
 │   ├── CharmArt.tsx         # 부적 문양
 │   ├── CharmCard.tsx        # 부적 카드
 │   └── BannerAd.tsx         # 기록 화면 아래 배너 광고

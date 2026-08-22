@@ -1,6 +1,6 @@
 .page {
   padding: 24px 20px;
-  min-height: calc(100dvh - 72px);
+  min-height: calc(100dvh - 96px - env(safe-area-inset-bottom, 0px));
 }
 
 .title {

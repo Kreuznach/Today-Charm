@@ -29,7 +29,7 @@ today-lucky-charm/
 │   │   └── config.ts             # 광고, 앱 닫기
 │   ├── components/
 │   │   ├── PrimaryButton.tsx
-│   │   ├── BottomNav.tsx
+│   │   ├── BottomNav.tsx         # 떠 있는 알약 탭바
 │   │   ├── CharmArt.tsx          # 부적 문양
 │   │   ├── CharmCard.tsx
 │   │   └── BannerAd.tsx
@@ -57,6 +57,10 @@ HashRouter
 
 주소 앞에 `#`이 붙는 `HashRouter`를 씁니다.
 토스 웹뷰에서는 일반 브라우저처럼 주소를 바꾸기 어려워서, `#` 뒤만 바꿉니다.
+
+아래쪽 탭은 [src/components/BottomNav.tsx](../src/components/BottomNav.tsx)입니다.
+토스 메인 탭과 헷갈리지 않게, 화면 맨 아래에 붙이지 않고 **둥근 알약**이 떠 있게 그립니다.
+탭은 오늘 / 기록 / 도감 3개입니다. 규칙상 2~5개만 쓸 수 있습니다.
 
 ---
 

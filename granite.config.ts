@@ -32,7 +32,7 @@ export default defineConfig({
   permissions: [],
 
   // 위쪽 뒤로 가기 버튼은 끕니다.
-  // 화면 이동은 아래쪽 BottomNav 가 맡습니다.
+  // 화면 이동은 아래쪽 플로팅 탭바(BottomNav)가 맡습니다.
   navigationBar: {
     withBackButton: false,
   },

@@ -1,54 +1,58 @@
-.nav {
+/* 화면 아래쪽에 떠 있는 알약 탭바 */
+.dock {
   position: fixed;
-  bottom: 0;
   left: 50%;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   transform: translateX(-50%);
-  width: 100%;
-  max-width: var(--max-w);
-  height: 72px;
-  background: rgba(255, 248, 240, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid var(--gray-200);
+  width: min(calc(100% - 32px), calc(var(--max-w) - 32px));
+  z-index: 100;
+  pointer-events: none;
+}
+
+.bar {
+  pointer-events: auto;
   display: flex;
   align-items: center;
-  z-index: 100;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  height: 64px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow:
+    0 10px 28px rgba(25, 31, 40, 0.12),
+    0 2px 8px rgba(25, 31, 40, 0.06);
 }
 
 .tab {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  padding: 8px 0;
+  gap: 4px;
+  height: 100%;
   text-decoration: none;
-  color: var(--gray-400);
+  color: #b0b8c1;
   transition: color var(--transition), transform 120ms;
   -webkit-tap-highlight-color: transparent;
 }
 .tab:active {
-  transform: scale(0.92);
+  transform: scale(0.94);
 }
 
 .icon {
-  font-size: 22px;
-  line-height: 1;
-  filter: grayscale(1) opacity(0.5);
-  transition: filter var(--transition);
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
 }
+
 .label {
   font-size: 11px;
   font-weight: 600;
   letter-spacing: -0.2px;
-  transition: color var(--transition);
+  line-height: 1;
 }
 
 .tab.active {
-  color: var(--pink-dark);
-}
-.tab.active .icon {
-  filter: none;
+  color: #191f28;
 }
