@@ -4,6 +4,8 @@
  */
 
 import type { CharmResult } from '../types/charm';
+import { isCharmDrawable } from '../lib/season';
+import { getTodayKST } from '../lib/date';
 
 export const CHARMS: CharmResult[] = [
   // ── daily ──────────────────────────────────────────────
@@ -301,15 +303,54 @@ export const CHARMS: CharmResult[] = [
   },
 ];
 
+/** 같은 부적을 다시 만났을 때 쓰는 한 줄 */
+const SECOND_MEET: Record<string, string> = {
+  'charm-01': '또 일어났구나. 어제보다 이불이 조금 덜 무거웠으면 좋겠다.',
+  'charm-02': '또 만났네. 오늘은 10분이 아니라 한 가지만 끝까지 해보자.',
+  'charm-03': '귀찮음이 또 왔구나. 그래도 너는 또 시작하려고 했어.',
+  'charm-04': '마음이 또 흔들려도, 너는 이미 방패를 들고 있어.',
+  'charm-05': '체력을 아끼는 너를 다시 만났어. 오늘은 조금 더 천천히.',
+  'charm-06': '오후에 또 졸렸구나. 물 한 잔은 여전히 잘 통해.',
+  'charm-07': '지갑이 또 쉬고 싶어 하네. 오늘은 진짜 필요한 것만.',
+  'charm-08': '장바구니가 또 가득하구나. 3일만 더 기다려 보자.',
+  'charm-09': '숨은 혜택이 또 있대. 이미 가진 것을 먼저 쓰자.',
+  'charm-10': '카페 앞을 또 지나갔구나. 집 커피도 너를 기다려.',
+  'charm-11': '배달앱이 또 반짝이네. 오늘은 발이 먼저 움직여도 돼.',
+  'charm-12': '구독이 또 떠올랐어. 안 쓰는 것만 조용히 정리하자.',
+  'charm-13': '말하기 전에 한 번 더. 그 습관이 다시 와 줬어.',
+  'charm-14': '미룬 답장이 또 있구나. 짧게만 보내도 충분해.',
+  'charm-15': '상대의 얼굴을 또 살펴보자. 너는 이미 잘하고 있어.',
+  'charm-16': '회의가 또 길어도, 끝은 분명히 있어.',
+  'charm-17': '좋은 말을 또 모아 보자. 흘려보내지 마.',
+  'charm-18': '모든 사람을 다 맞출 필요는 없어. 평온이면 돼.',
+  'charm-19': '메뉴가 또 고민이네. 첫 번째로 떠오른 그걸로.',
+  'charm-20': '저녁은 또 고민해도 괜찮아. 익숙한 맛이 최고야.',
+  'charm-21': '오늘은 또 순한 맛도 괜찮아. 배가 더 중요하다.',
+  'charm-22': '제대로 앉아서 먹자. 너는 그럴 자격이 있어.',
+  'charm-23': '고양이처럼 또 늘어져도 돼. 그것도 실력이야.',
+  'charm-24': '작은 좋은 일이 또 올 거야. 이번엔 꼭 알아채자.',
+};
+
 /** charmId 로 단일 부적 조회 */
 export function getCharmById(id: string): CharmResult | undefined {
   return CHARMS.find(c => c.charmId === id);
 }
 
-/** 오늘의 부적 랜덤 뽑기 (선택적으로 특정 ID 제외) */
-export function drawRandomCharm(excludeId?: string): CharmResult {
-  const pool = excludeId ? CHARMS.filter(c => c.charmId !== excludeId) : CHARMS;
-  return pool[Math.floor(Math.random() * pool.length)];
+/** 오늘의 부적 랜덤 뽑기 (선택적으로 특정 ID 제외, 시즌 아닌 부적은 빼기) */
+export function drawRandomCharm(excludeId?: string, dateStr: string = getTodayKST()): CharmResult {
+  const pool = CHARMS.filter(c => {
+    if (excludeId && c.charmId === excludeId) return false;
+    return isCharmDrawable(c, dateStr);
+  });
+  const usable = pool.length > 0 ? pool : CHARMS.filter(c => c.rarity !== 'seasonal');
+  return usable[Math.floor(Math.random() * usable.length)];
+}
+
+export function getCharmStory(charm: CharmResult, acquiredCount: number): string {
+  if (acquiredCount >= 2 && SECOND_MEET[charm.charmId]) {
+    return SECOND_MEET[charm.charmId];
+  }
+  return charm.mainMessage;
 }
 
 /** 카테고리별 이모지 반환 */

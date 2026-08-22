@@ -13,8 +13,8 @@ export default defineConfig({
 
   brand: {
     displayName: '오늘의 말랑부적',
-    // 심사에 쓸 아이콘을 올린 뒤, 토스 콘솔에서 받은 주소로 바꾸세요
-    icon: 'https://placehold.co/96x96/FF8FAB/ffffff.png',
+    // 콘솔에 올린 96x96 아이콘 주소로 바꾸세요. 로컬 원본은 public/app-icon.svg 입니다.
+    icon: 'https://placehold.co/96x96/FF8FAB/FFF8F0.png?text=%E2%9D%80',
     primaryColor: '#FF8FAB',
   },
 

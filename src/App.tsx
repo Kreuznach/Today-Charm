@@ -10,9 +10,14 @@ import HomePage from './pages/HomePage';
 import TodayPage from './pages/TodayPage';
 import HistoryPage from './pages/HistoryPage';
 import CollectionPage from './pages/CollectionPage';
+import { captureReferrer } from './lib/referrer';
 
 function AppShell() {
   const location = useLocation();
+
+  useEffect(() => {
+    captureReferrer();
+  }, []);
 
   // Android 하드웨어 백버튼: 루트(/)이면 앱 종료, 아니면 브라우저 기본 뒤로가기
   useEffect(() => {

@@ -7,6 +7,7 @@
  */
 
 import type { CharmCollectionItem, DailyCharmRecord } from '../types/charm';
+import { getYesterdayKST } from './date';
 
 const KEY_RECORDS = 'charm_records';       // DailyCharmRecord[]
 const KEY_COLLECTION = 'charm_collection'; // CharmCollectionItem[]
@@ -97,4 +98,34 @@ function updateCollection(charmId: string, date: string): void {
     items.push({ charmId, firstAcquiredDate: date, acquiredCount: 1 });
   }
   saveCollection(items);
+}
+
+export function getAcquiredCount(charmId: string): number {
+  return loadCollection().find(i => i.charmId === charmId)?.acquiredCount ?? 0;
+}
+
+/**
+ * 오늘까지 하루도 안 빼고 뽑은 날 수.
+ * 어제 기록이 없으면 오늘은 1부터 다시 셉니다.
+ */
+export function getStreak(today: string): number {
+  const all = loadRecords();
+  const dates = new Set(all.map(r => r.date));
+  if (!dates.has(today)) return 0;
+  let count = 0;
+  let cursor = today;
+  while (dates.has(cursor)) {
+    count += 1;
+    cursor = getYesterdayKST(cursor);
+  }
+  return count;
+}
+
+export function setTodayUsageDone(date: string, done: boolean): DailyCharmRecord | null {
+  const records = loadRecords();
+  const record = records.find(r => r.date === date);
+  if (!record) return null;
+  record.usageDone = done;
+  saveRecords(records);
+  return record;
 }

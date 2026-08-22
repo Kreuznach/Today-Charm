@@ -1,0 +1,94 @@
+.seal {
+  position: relative;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  border: 2px solid currentColor;
+  box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.35);
+  flex-shrink: 0;
+}
+
+.sm { width: 44px; height: 56px; }
+.md { width: 72px; height: 92px; }
+.lg { width: 112px; height: 144px; }
+
+.daily {
+  color: #c9862a;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.55), transparent 42%),
+    linear-gradient(160deg, #fff4d6, #ffd27a);
+}
+.spending {
+  color: #2f8f6b;
+  background:
+    radial-gradient(circle at 70% 18%, rgba(255,255,255,.5), transparent 40%),
+    linear-gradient(160deg, #e8fff4, #8ee0b8);
+}
+.social {
+  color: #5b63c7;
+  background:
+    radial-gradient(circle at 28% 22%, rgba(255,255,255,.55), transparent 42%),
+    linear-gradient(160deg, #eef0ff, #b8c0ff);
+}
+.meal {
+  color: #c45c3a;
+  background:
+    radial-gradient(circle at 72% 20%, rgba(255,255,255,.5), transparent 40%),
+    linear-gradient(160deg, #fff1e8, #ffb089);
+}
+.cute {
+  color: #d45b86;
+  background:
+    radial-gradient(circle at 30% 18%, rgba(255,255,255,.6), transparent 44%),
+    linear-gradient(160deg, #fff0f5, #ffb3c9);
+}
+
+.special {
+  box-shadow:
+    inset 0 0 0 5px rgba(255, 255, 255, 0.4),
+    0 0 0 2px #ffd166,
+    0 8px 18px rgba(255, 209, 102, 0.35);
+}
+.seasonal {
+  box-shadow:
+    inset 0 0 0 5px rgba(255, 255, 255, 0.4),
+    0 0 0 2px #a78bfa,
+    0 8px 18px rgba(167, 139, 250, 0.35);
+}
+
+.locked {
+  filter: grayscale(1) contrast(0.85);
+  opacity: 0.7;
+}
+
+.mark {
+  font-size: 1.35em;
+  font-weight: 800;
+  line-height: 1;
+  color: currentColor;
+}
+
+.sm .mark { font-size: 18px; }
+.md .mark { font-size: 28px; }
+.lg .mark { font-size: 42px; }
+
+.cornerTL,
+.cornerBR {
+  position: absolute;
+  width: 28%;
+  height: 18%;
+  border-color: currentColor;
+  opacity: 0.45;
+}
+.cornerTL {
+  top: 8%;
+  left: 10%;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+.cornerBR {
+  right: 10%;
+  bottom: 8%;
+  border-right: 2px solid;
+  border-bottom: 2px solid;
+}

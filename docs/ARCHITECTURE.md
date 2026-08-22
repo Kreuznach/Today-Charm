@@ -21,11 +21,16 @@ today-lucky-charm/
 │   ├── data/charms.ts            # 부적 24종
 │   ├── lib/
 │   │   ├── date.ts               # 한국 시간 날짜
-│   │   ├── storage.ts            # 브라우저 저장
+│   │   ├── storage.ts            # 브라우저 저장, 연속 방문
+│   │   ├── season.ts             # 시즌 부적이 열리는 계절
+│   │   ├── share.ts              # 부적 보내기
+│   │   ├── referrer.ts           # 들어온 문 기억
+│   │   ├── notify.ts             # 알림 받기 기억
 │   │   └── config.ts             # 광고, 앱 닫기
 │   ├── components/
 │   │   ├── PrimaryButton.tsx
 │   │   ├── BottomNav.tsx
+│   │   ├── CharmArt.tsx          # 부적 문양
 │   │   ├── CharmCard.tsx
 │   │   └── BannerAd.tsx
 │   ├── pages/                    # 화면 네 장
@@ -71,8 +76,9 @@ interface CharmCollectionItem { ... } // 도감 한 칸
 ### 4.2 [src/data/charms.ts](../src/data/charms.ts) — 부적 목록
 
 - `CHARMS`: 부적 24장
-- `drawRandomCharm(excludeId?)`: 아무거나 하나 뽑기. 다시 뽑을 때는 방금 나온 부적은 빼요.
-- `getCategoryEmoji()`, `getCategoryLabel()`, `getCharmEmoji()`: 화면에 이모지를 붙이는 도우미
+- `drawRandomCharm(excludeId?, date?)`: 아무거나 하나 뽑기. 다시 뽑을 때는 방금 나온 부적은 빼요. 시즌이 아니면 시즌 부적도 빼요.
+- `getCharmStory()`: 같은 부적을 다시 만나면 다른 한 줄을 줘요.
+- `getCategoryEmoji()`, `getCategoryLabel()`, `getCharmEmoji()`: 작은 표시용 도우미
 
 ### 4.3 [src/lib/date.ts](../src/lib/date.ts) — 한국 시간
 
@@ -88,6 +94,8 @@ localStorage
 └── 'charm_collection'  → 도감
 ```
 
+`getStreak()`은 하루도 안 빼고 뽑은 날 수를 셉니다.
+`setTodayUsageDone()`은 “오늘 해 볼 일” 체크만 기억합니다.
 `saveTodayRecord()`를 부르면 도감도 같이 고칩니다.
 나중에 저장 방식을 바꿔도, 이 파일의 함수 이름만 같으면 화면 코드는 거의 안 건드려도 됩니다.
 

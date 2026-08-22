@@ -13,6 +13,7 @@ export interface CharmResult {
   charmImageKey: string;
   rarity: CharmRarity;
   mainMessage: string;
+  secondMeetMessage?: string;
   charmEffect: string;
   todayUsage: string;
   avoidPoint: string;
@@ -25,6 +26,7 @@ export interface DailyCharmRecord {
   finalCharm: CharmResult;
   rerolled: boolean;
   createdAt: string;       // ISO 8601
+  usageDone?: boolean;     // 오늘 해 볼 일을 했는지
 }
 
 export interface CharmCollectionItem {

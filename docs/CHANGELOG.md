@@ -3,6 +3,35 @@
 이 파일은 버전이 올라갈 때마다 무엇을 고쳤는지 적습니다.
 위에서부터 가장 최근 내용입니다.
 
+## [1.4.0] — 2026-08-22
+
+### 디자인, 다시 오기, 보내기
+
+**화면**
+
+- 부적마다 다른 종이 문양과 종류별 색을 넣었습니다.
+- 특별 부적과 시즌 부적은 테두리가 다릅니다.
+- 홈에서 오늘 부적을 바로 볼 수 있습니다.
+- 연속으로 뽑은 날 수가 보입니다.
+- “오늘 해 볼 일”에 체크할 수 있습니다.
+- 부적을 친구에게 보낼 수 있습니다. 돈이나 포인트는 주지 않습니다.
+- 같은 부적을 다시 뽑으면 두 번째 문장이 나옵니다.
+- 시즌 부적은 그 계절에만 새로 나옵니다.
+- 도감의 잠긴 칸은 실루엣으로 보입니다.
+- 홈에서 내일 알림을 받고 싶은지 고를 수 있습니다. 진짜 알림은 토스 검수 뒤에 갑니다.
+
+**문서**
+
+- [IMPROVEMENT_PLAN.md](IMPROVEMENT_PLAN.md)의 할 일을 지금 코드에 맞게 고쳤습니다.
+
+**바뀐 파일**
+
+- `src/components/CharmArt.tsx`, `CharmCard.tsx`
+- `src/pages/HomePage.tsx`, `TodayPage.tsx`, `HistoryPage.tsx`, `CollectionPage.tsx`
+- `src/lib/storage.ts`, `date.ts`, `season.ts`, `share.ts`, `referrer.ts`, `notify.ts`
+- `src/data/charms.ts`, `src/App.tsx`
+- `public/app-icon.svg`, `docs/*.md`
+
 ## [문서] — 2026-08-22
 
 ### 맹점 분석과 개발 반영 계획

@@ -34,13 +34,20 @@ export function isSameDate(a: string, b: string): boolean {
  * 최근 n일의 날짜 목록 반환 (오늘 포함, KST 기준, 최신순)
  */
 export function getRecentDates(n: number): string[] {
-  const now = new Date();
-  const kstNow = new Date(now.getTime() + KST_OFFSET_MS);
   const dates: string[] = [];
+  let cursor = getTodayKST();
   for (let i = 0; i < n; i++) {
-    const d = new Date(kstNow);
-    d.setDate(d.getDate() - i);
-    dates.push(d.toISOString().slice(0, 10));
+    dates.push(cursor);
+    cursor = getYesterdayKST(cursor);
   }
   return dates;
+}
+
+/**
+ * 하루 전 날짜. 문자열만 보고 계산해서 시간대 실수를 줄입니다.
+ */
+export function getYesterdayKST(dateStr: string): string {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const utc = Date.UTC(y, m - 1, d);
+  return new Date(utc - 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 }

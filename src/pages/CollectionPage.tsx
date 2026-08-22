@@ -1,15 +1,20 @@
 /**
  * src/pages/CollectionPage.tsx
- * 전체 부적 24종 도감 — 획득/미획득 표시
+ * 부적 도감 — 실루엣, 시즌 안내
  */
 import React, { useEffect, useState } from 'react';
-import { CHARMS, getCategoryEmoji, getCategoryLabel, getCharmEmoji } from '../data/charms';
+import { CHARMS, getCategoryEmoji, getCategoryLabel } from '../data/charms';
 import { getCollection } from '../lib/storage';
+import { getTodayKST } from '../lib/date';
+import { getCharmSeason, getSeason, getSeasonLabel, isCharmDrawable } from '../lib/season';
+import CharmArt from '../components/CharmArt';
 import type { CharmCollectionItem } from '../types/charm';
 import styles from './CollectionPage.module.css';
 
 export default function CollectionPage() {
   const [collection, setCollection] = useState<CharmCollectionItem[]>([]);
+  const today = getTodayKST();
+  const season = getSeason(today);
 
   useEffect(() => {
     setCollection(getCollection());
@@ -19,12 +24,12 @@ export default function CollectionPage() {
   const acquiredCount = acquiredIds.size;
   const total = CHARMS.length;
   const pct = Math.round((acquiredCount / total) * 100);
+  const nextLocked = CHARMS.find(c => !acquiredIds.has(c.charmId));
 
   return (
     <div className={styles.page}>
       <h1 className={styles.title}>부적 도감</h1>
 
-      {/* 모은 부적 */}
       <div className={styles.progress}>
         <div className={styles.progressHeader}>
           <span className={styles.progressLabel}>모은 부적</span>
@@ -33,22 +38,32 @@ export default function CollectionPage() {
         <div className={styles.progressBar}>
           <div className={styles.progressFill} style={{ width: `${pct}%` }} />
         </div>
-        <span className={styles.progressPct}>{pct}%</span>
+        <span className={styles.progressPct}>
+          {pct}%
+          {nextLocked
+            ? ` · 다음 빈칸: ${isCharmDrawable(nextLocked, today) ? '지금 뽑을 수 있어요' : `${getSeasonLabel(getCharmSeason(nextLocked.charmId) ?? season)}에 열려요`}`
+            : ' · 다 모았어요'}
+        </span>
+        <p className={styles.seasonHint}>지금은 {getSeasonLabel(season)}이에요. 시즌 부적은 그 계절에만 새로 나와요.</p>
       </div>
 
-      {/* 그리드 */}
       <div className={styles.grid}>
         {CHARMS.map(charm => {
           const acquired = acquiredIds.has(charm.charmId);
           const item = collection.find(c => c.charmId === charm.charmId);
+          const charmSeason = getCharmSeason(charm.charmId);
           return (
             <div
               key={charm.charmId}
               className={[styles.cell, acquired ? styles.acquired : styles.locked].join(' ')}
             >
-              <span className={styles.cellEmoji}>
-                {acquired ? getCharmEmoji(charm.charmImageKey) : '🔒'}
-              </span>
+              <CharmArt
+                imageKey={charm.charmImageKey}
+                category={charm.charmCategory}
+                rarity={charm.rarity}
+                size="sm"
+                locked={!acquired}
+              />
               <span className={styles.cellName}>
                 {acquired ? charm.charmName : '???'}
               </span>
@@ -59,6 +74,9 @@ export default function CollectionPage() {
                 <span className={styles.categoryTag}>
                   {getCategoryEmoji(charm.charmCategory)} {getCategoryLabel(charm.charmCategory)}
                 </span>
+              )}
+              {!acquired && charmSeason && (
+                <span className={styles.categoryTag}>{getSeasonLabel(charmSeason)} 시즌</span>
               )}
             </div>
           );

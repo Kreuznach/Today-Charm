@@ -8,7 +8,17 @@
   align-items: center;
   gap: 12px;
   width: 100%;
+  border: 2px solid transparent;
 }
+
+.daily { background: linear-gradient(180deg, #fffaf0 0%, #ffffff 46%); }
+.spending { background: linear-gradient(180deg, #f3fff8 0%, #ffffff 46%); }
+.social { background: linear-gradient(180deg, #f5f6ff 0%, #ffffff 46%); }
+.meal { background: linear-gradient(180deg, #fff6f0 0%, #ffffff 46%); }
+.cute { background: linear-gradient(180deg, #fff5f8 0%, #ffffff 46%); }
+
+.special { border-color: #ffd166; }
+.seasonal { border-color: #a78bfa; }
 
 /* ── 등장 애니메이션 ── */
 

@@ -5,8 +5,8 @@
 import React, { useEffect, useState } from 'react';
 import { getRecentRecords } from '../lib/storage';
 import { getRecentDates, formatDateKST, getTodayKST } from '../lib/date';
-import { getCharmEmoji } from '../data/charms';
 import type { DailyCharmRecord } from '../types/charm';
+import CharmArt from '../components/CharmArt';
 import BannerAd from '../components/BannerAd';
 import styles from './HistoryPage.module.css';
 
@@ -48,21 +48,27 @@ export default function HistoryPage() {
                 </div>
                 {rec ? (
                   <div className={styles.recordCard}>
-                    <span className={styles.recordEmoji}>
-                      {getCharmEmoji(rec.finalCharm.charmImageKey)}
-                    </span>
+                    <CharmArt
+                      imageKey={rec.finalCharm.charmImageKey}
+                      category={rec.finalCharm.charmCategory}
+                      rarity={rec.finalCharm.rarity}
+                      size="sm"
+                    />
                     <div className={styles.recordInfo}>
                       <p className={styles.recordName}>{rec.finalCharm.charmName}</p>
                       <p className={styles.recordMsg}>{rec.finalCharm.mainMessage}</p>
+                      {rec.usageDone && <p className={styles.recordMsg}>오늘 해 볼 일 완료</p>}
                     </div>
                     {rec.rerolled && (
                       <span className={styles.rerolledBadge}>재뽑기</span>
                     )}
                   </div>
                 ) : (
-                  <div className={styles.emptyRecord}>
-                    <span className={styles.emptyRecordIcon}>🌙</span>
-                    <span className={styles.emptyRecordText}>아직 없어요</span>
+                  <div className={[styles.emptyRecord, isToday ? styles.missToday : ''].join(' ')}>
+                    <span className={styles.emptyRecordIcon}>○</span>
+                    <span className={styles.emptyRecordText}>
+                      {isToday ? '오늘은 아직 안 뽑았어요' : '이 날은 안 뽑았어요'}
+                    </span>
                   </div>
                 )}
               </li>

@@ -88,3 +88,37 @@
   text-align: center;
   line-height: 1.5;
 }
+
+.streak {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pink-dark);
+  background: var(--pink-light);
+  padding: 6px 12px;
+  border-radius: 100px;
+}
+
+.heroQuote {
+  font-size: 13px;
+  color: var(--gray-600);
+  line-height: 1.5;
+  background: var(--pink-light);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  width: 100%;
+}
+
+.collectionHint {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-600);
+}
+
+.notifyBtn {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pink-dark);
+  background: var(--pink-light);
+  padding: 10px 14px;
+  border-radius: 100px;
+}

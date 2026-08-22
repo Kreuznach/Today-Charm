@@ -1,25 +1,26 @@
 /**
  * src/components/CharmCard.tsx
- * 부적 카드 UI 컴포넌트
+ * 부적 카드 — 종류마다 색이 다르고, 특별/시즌은 테두리가 다릅니다.
  */
 import React from 'react';
 import type { CharmResult } from '../types/charm';
-import { getCategoryEmoji, getCategoryLabel, getCharmEmoji } from '../data/charms';
+import { getCategoryEmoji, getCategoryLabel } from '../data/charms';
+import CharmArt from './CharmArt';
 import styles from './CharmCard.module.css';
 
 interface CharmCardProps {
   charm: CharmResult;
-  /** 카드 등장 애니메이션 종류 */
   animationType?: 'fade' | 'reveal' | 'burst';
+  story?: string;
 }
 
 const RARITY_LABEL: Record<string, string> = {
   basic: '기본',
-  special: '특별 ✨',
-  seasonal: '시즌 🌙',
+  special: '특별',
+  seasonal: '시즌',
 };
 
-export default function CharmCard({ charm, animationType = 'fade' }: CharmCardProps) {
+export default function CharmCard({ charm, animationType = 'fade', story }: CharmCardProps) {
   const animClass = animationType === 'reveal'
     ? styles.reveal
     : animationType === 'burst'
@@ -27,8 +28,7 @@ export default function CharmCard({ charm, animationType = 'fade' }: CharmCardPr
     : styles.fadeIn;
 
   return (
-    <div className={[styles.card, animClass].join(' ')}>
-      {/* 헤더 */}
+    <div className={[styles.card, styles[charm.charmCategory], styles[charm.rarity], animClass].join(' ')}>
       <div className={styles.header}>
         <span className={styles.category}>
           {getCategoryEmoji(charm.charmCategory)} {getCategoryLabel(charm.charmCategory)}
@@ -36,14 +36,16 @@ export default function CharmCard({ charm, animationType = 'fade' }: CharmCardPr
         <span className={styles.rarity}>{RARITY_LABEL[charm.rarity] ?? charm.rarity}</span>
       </div>
 
-      {/* 이모지 심볼 */}
-      <div className={styles.symbol}>{getCharmEmoji(charm.charmImageKey)}</div>
+      <CharmArt
+        imageKey={charm.charmImageKey}
+        category={charm.charmCategory}
+        rarity={charm.rarity}
+        size="lg"
+      />
 
-      {/* 부적명 */}
       <h2 className={styles.name}>{charm.charmName}</h2>
 
-      {/* 메인 메시지 */}
-      <p className={styles.mainMessage}>{charm.mainMessage}</p>
+      <p className={styles.mainMessage}>{story ?? charm.mainMessage}</p>
 
       <hr className={styles.divider} />
 

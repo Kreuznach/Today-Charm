@@ -8,6 +8,9 @@
 이 프로젝트는 **React + Vite + TypeScript**로 만들었습니다.
 토스 앱 안에서 열리는 작은 웹앱(Apps in Toss, 줄여서 AIT)으로 쓸 수 있게 준비되어 있어요.
 
+지금은 부적마다 다른 문양이 있고, 연속 방문과 보내기도 됩니다.
+진짜 운세가 아니고, 돈이나 포인트도 주지 않습니다.
+
 ---
 
 ## 이 앱이 하는 일
@@ -77,10 +80,13 @@ src/
 ├── lib/
 │   ├── date.ts              # 한국 시간(KST) 날짜
 │   ├── storage.ts           # 브라우저에 기록 저장
+│   ├── season.ts            # 시즌 부적
+│   ├── share.ts             # 부적 보내기
 │   └── config.ts            # 광고와 앱 닫기
 ├── components/
 │   ├── PrimaryButton.tsx    # 큰 버튼
 │   ├── BottomNav.tsx        # 아래쪽 탭
+│   ├── CharmArt.tsx         # 부적 문양
 │   ├── CharmCard.tsx        # 부적 카드
 │   └── BannerAd.tsx         # 기록 화면 아래 배너 광고
 ├── pages/                   # 각 화면

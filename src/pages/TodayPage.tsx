@@ -8,9 +8,10 @@ import React, { useEffect, useState, useCallback } from 'react';
 import CharmCard from '../components/CharmCard';
 import PrimaryButton from '../components/PrimaryButton';
 import { getTodayKST } from '../lib/date';
-import { getTodayRecord, saveTodayRecord } from '../lib/storage';
-import { drawRandomCharm } from '../data/charms';
+import { getTodayRecord, saveTodayRecord, getStreak, getAcquiredCount, setTodayUsageDone } from '../lib/storage';
+import { drawRandomCharm, getCharmStory } from '../data/charms';
 import { showRewardAd } from '../lib/config';
+import { shareCharm } from '../lib/share';
 import type { CharmResult, DailyCharmRecord } from '../types/charm';
 import styles from './TodayPage.module.css';
 
@@ -28,6 +29,9 @@ export default function TodayPage() {
   const [firstCharm, setFirstCharm] = useState<CharmResult | null>(null);
   const [finalCharm, setFinalCharm] = useState<CharmResult | null>(null);
   const [adLoading, setAdLoading] = useState(false);
+  const [usageDone, setUsageDone] = useState(false);
+  const [shareHint, setShareHint] = useState('');
+  const [streak, setStreak] = useState(0);
 
   // 이미 뽑은 기록이 있으면 복원
   useEffect(() => {
@@ -35,8 +39,10 @@ export default function TodayPage() {
     if (record) {
       setFirstCharm(record.firstCharm ?? record.finalCharm);
       setFinalCharm(record.finalCharm);
+      setUsageDone(record.usageDone === true);
       setPhase(record.rerolled ? 'final' : 'saved');
     }
+    setStreak(getStreak(today));
   }, [today]);
 
   const handleDraw = useCallback(() => {
@@ -61,6 +67,7 @@ export default function TodayPage() {
     };
     saveTodayRecord(record);
     setFinalCharm(firstCharm);
+    setStreak(getStreak(today));
     setPhase('saved');
   }, [firstCharm, today]);
 
@@ -87,6 +94,7 @@ export default function TodayPage() {
           createdAt: new Date().toISOString(),
         };
         saveTodayRecord(record);
+        setStreak(getStreak(today));
         setFinalCharm(newCharm);
         setPhase('final');
       }, 800);
@@ -145,26 +153,47 @@ export default function TodayPage() {
     phase === 'first' ? 'reveal' as const :
     phase === 'final' && finalCharm?.charmId !== firstCharm?.charmId ? 'burst' as const :
     'fade' as const;
+  const meetCount = getAcquiredCount(displayCharm.charmId) + (phase === 'first' ? 1 : 0);
+  const story = getCharmStory(displayCharm, Math.max(meetCount, 1));
+
+  async function handleShare() {
+    const result = await shareCharm(displayCharm);
+    if (result === 'shared') setShareHint('부적을 보냈어요. 돈이나 포인트는 주지 않아요.');
+    else if (result === 'copied') setShareHint('글을 복사했어요. 친구에게 붙여 넣어 보세요.');
+    else setShareHint('이번에는 보내지 못했어요. 다시 눌러 보세요.');
+  }
+
+  function handleUsageToggle() {
+    const next = !usageDone;
+    setUsageDone(next);
+    setTodayUsageDone(today, next);
+  }
 
   return (
     <div className={styles.page}>
-      {/* 상태 배지 */}
       <div className={styles.statusBadge}>
         {phase === 'final'
-          ? '✅ 오늘의 부적'
+          ? '오늘의 부적'
           : phase === 'saved'
-          ? '✅ 저장한 부적 · 한 번 더 뽑을 수 있어요'
-          : '🎴 오늘의 말랑부적'}
+          ? '저장한 부적 · 한 번 더 뽑을 수 있어요'
+          : '오늘의 말랑부적'}
       </div>
+      {streak > 0 && <p className={styles.streak}>{streak}일 연속이에요</p>}
 
-      {/* 부적 카드 */}
       <CharmCard
         charm={displayCharm}
         key={displayCharm.charmId + phase}
         animationType={animationType}
+        story={story}
       />
 
-      {/* 액션 버튼 */}
+      {(phase === 'saved' || phase === 'final') && (
+        <label className={styles.checkRow}>
+          <input type="checkbox" checked={usageDone} onChange={handleUsageToggle} />
+          <span>오늘 해 볼 일을 했어요</span>
+        </label>
+      )}
+
       <div className={styles.actions}>
         {phase === 'first' && (
           <>
@@ -181,11 +210,17 @@ export default function TodayPage() {
             광고 보고 한 번 더 뽑기
           </PrimaryButton>
         )}
+        {(phase === 'saved' || phase === 'final') && (
+          <PrimaryButton variant="secondary" onClick={handleShare}>
+            이 부적 보내기
+          </PrimaryButton>
+        )}
         {phase === 'final' && (
           <p className={styles.finalNotice}>
-            오늘은 이 부적으로 할게요. 내일 다시 뽑아 봐요 🌸
+            오늘은 이 부적으로 할게요. 내일 다시 뽑아 봐요
           </p>
         )}
+        {shareHint && <p className={styles.finalNotice}>{shareHint}</p>}
       </div>
     </div>
   );
