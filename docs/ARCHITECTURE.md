@@ -9,6 +9,7 @@
 | 앱 ID | `today-lucky-charm` |
 | 어디서 열리나 | 토스 앱 안 웹뷰 (AIT) |
 | 만든 도구 | React 18 + Vite 6 + TypeScript 5 |
+| 앱인토스 SDK | `@apps-in-toss/web-framework` 3.4.0 (토스 권장 최소 버전 3.1 이상) |
 
 ---
 
@@ -38,7 +39,7 @@ today-lucky-charm/
 │   ├── main.tsx                  # 앱을 화면에 붙이는 시작점
 │   └── index.css                 # 공통 색과 레이아웃
 ├── docs/                         # 설명 문서
-├── granite.config.ts             # 토스 미니앱 설정
+├── apps-in-toss.config.ts        # 토스 미니앱 설정
 ├── vite.config.ts                # 빌드 설정
 └── package.json
 ```
@@ -169,7 +170,7 @@ npm run build:ait
   └── dist/를 today-lucky-charm.ait 로 묶습니다.
 ```
 
-파일 이름은 [granite.config.ts](../granite.config.ts)의 `appName`을 따릅니다.
+파일 이름은 [apps-in-toss.config.ts](../apps-in-toss.config.ts)의 `appName`을 따릅니다.
 
 ---
 

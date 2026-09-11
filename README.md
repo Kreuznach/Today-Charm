@@ -43,13 +43,13 @@ npm run typecheck
 ### 빌드하기
 
 ```bash
-# 웹 파일로 만들기 (dist/ 폴더가 생깁니다)
+# 웹 파일로 만들기 (dist/ 폴더와 today-lucky-charm.ait 파일이 함께 생깁니다)
 npm run build
 
 # 만든 결과를 미리 보기
 npm run preview
 
-# 토스에 올릴 .ait 파일 만들기
+# .ait 파일만 다시 만들고 싶을 때
 npm run build:ait
 ```
 
@@ -115,8 +115,8 @@ src/
 
 ### 1. 앱 이름과 아이콘
 
-[granite.config.ts](granite.config.ts)에서 앱 ID는 `today-lucky-charm`입니다.
-아이콘은 아직 임시 주소입니다. 토스 파트너 콘솔에서 받은 진짜 아이콘 주소로 바꿔야 합니다.
+[apps-in-toss.config.ts](apps-in-toss.config.ts)에서 앱 ID는 `today-lucky-charm`입니다.
+SDK 3.x부터 앱 아이콘·표시 이름은 이 파일이 아니라 **토스 파트너 콘솔**에서 등록/관리합니다.
 
 ### 2. 광고 ID
 

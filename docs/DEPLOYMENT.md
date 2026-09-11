@@ -44,7 +44,12 @@ npm run build
 npm run preview  # http://localhost:4173
 ```
 
-### 3.2 토스에 올릴 파일 만들기
+`npm run build`를 실행하면 `vite build` 다음에 `ait build`도 자동으로 실행되어,
+`dist/` 폴더와 `today-lucky-charm.ait` 파일이 한 번에 만들어집니다.
+
+### 3.2 토스에 올릴 파일만 다시 만들기
+
+이미 `dist/`가 있고 `.ait` 파일만 다시 묶고 싶을 때 씁니다.
 
 ```bash
 npm run build:ait
@@ -61,7 +66,7 @@ npm run build:ait
 
 ### 4.1 코드
 
-- [ ] [granite.config.ts](../granite.config.ts)의 `brand.icon`을 진짜 아이콘 주소로 바꿨다
+- [ ] 토스 파트너 콘솔에 진짜 앱 아이콘을 등록했다 (SDK 3.x부터 `brand.icon` 설정이 사라지고, 콘솔에서 등록합니다)
 - [ ] 광고 ID가 맞다 (`VITE_REWARD_AD_ID`, `VITE_BANNER_AD_ID` 또는 [src/lib/config.ts](../src/lib/config.ts) 기본값)
 - [ ] `npm run typecheck`에 오류가 없다
 
@@ -71,6 +76,10 @@ npm run build:ait
 - [ ] 돈을 준다는 말이 없다
 - [ ] 광고 다시 뽑기는 하루에 한 번만 된다
 - [ ] 이름이나 전화번호를 모으지 않는다 (브라우저 저장만 한다)
+- [ ] 앱인토스 SDK가 3.1 이상이다 (지금은 3.4.0)
+- [ ] 콘솔의 Origin 허용 목록에 아래 두 주소를 등록했다 (SDK 3.x부터 CORS 규칙이 바뀌었습니다)
+  - `https://today-lucky-charm.web.tossmini.com` (실제 서비스)
+  - `https://today-lucky-charm.private-web.tossmini.com` (콘솔 QR 테스트)
 
 ### 4.3 화면
 
@@ -104,6 +113,7 @@ npm run build:ait
 | 1.3.1 | 2026-08-17 | 한글 문장을 자연스럽게, 문서를 쉽게 |
 | 1.4.0 | 2026-08-22 | 부적 문양, 연속 방문, 보내기, 시즌 |
 | 1.4.1 | 2026-08-22 | 아래 탭을 떠 있는 알약 모양으로 |
+| 1.5.0 | 2026-09-11 | 앱인토스 SDK를 3.4.0으로 올림 (설정 파일이 `apps-in-toss.config.ts`로 바뀜) |
 
 더 자세한 내용은 [CHANGELOG.md](CHANGELOG.md)를 보세요.
 

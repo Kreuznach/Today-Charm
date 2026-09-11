@@ -3,6 +3,42 @@
 이 파일은 버전이 올라갈 때마다 무엇을 고쳤는지 적습니다.
 위에서부터 가장 최근 내용입니다.
 
+## [1.5.0] — 2026-09-11
+
+### 앱인토스 SDK를 최신 버전으로 올렸어요
+
+**왜 고쳤나**
+
+이 앱은 "앱인토스(Apps in Toss) SDK"라는 도구를 빌려서 토스 앱 안에서 열립니다.
+토스에서 "SDK를 3.1 버전 이상으로 써 주세요"라고 안내했는데,
+우리 앱은 **2.5.1** 버전을 쓰고 있었습니다. 그래서 최신 버전으로 바꿨습니다.
+
+**무엇을 바꿨나**
+
+- SDK(`@apps-in-toss/web-framework`)를 2.5.1 → **3.4.0**으로 올렸습니다.
+- 앱을 만드는 도구(`@apps-in-toss/cli`)도 3.4.0으로 같이 올렸습니다.
+- SDK가 3버전으로 바뀌면서 설정 파일 이름과 모양이 달라졌습니다.
+  - `granite.config.ts` → `apps-in-toss.config.ts`로 이름이 바뀌었습니다.
+  - 앱 아이콘 주소는 이제 이 파일이 아니라 **토스 파트너 콘솔**에서 등록합니다.
+  - 이 변환은 토스가 만든 `ait migrate v3` 명령으로 자동으로 처리했습니다.
+- 개발할 때 브라우저에서 토스 SDK 흉내를 내주는 `@apps-in-toss/devtools`를 새로 추가했습니다.
+- 타입 검사(`npm run typecheck`), 웹 빌드(`npm run build`), 배포 파일 빌드(`npm run build:ait`)를
+  모두 다시 실행해서 잘 되는지 확인했습니다.
+
+**바뀐 파일**
+
+- [package.json](../package.json)
+- [apps-in-toss.config.ts](../apps-in-toss.config.ts) (예전 이름: `granite.config.ts`)
+- [vite.config.ts](../vite.config.ts)
+- [README.md](../README.md), [ARCHITECTURE.md](ARCHITECTURE.md), [DEPLOYMENT.md](DEPLOYMENT.md), [IMPROVEMENT_PLAN.md](IMPROVEMENT_PLAN.md)
+
+**올릴 때 꼭 확인할 것**
+
+- SDK 3.x는 한 번 올리면 2.x로 되돌릴 수 없습니다. 꼭 QR 테스트를 먼저 해 보세요.
+- 토스 파트너 콘솔의 Origin(주소) 허용 목록에 아래 두 주소를 추가해야 합니다.
+  - `https://today-lucky-charm.web.tossmini.com`
+  - `https://today-lucky-charm.private-web.tossmini.com`
+
 ## [1.4.1] — 2026-08-22
 
 ### 아래쪽 탭을 떠 있는 알약 모양으로
