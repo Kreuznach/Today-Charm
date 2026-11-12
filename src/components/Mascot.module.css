@@ -1,0 +1,18 @@
+.mascot {
+  display: block;
+  filter: drop-shadow(0 6px 10px rgba(255, 143, 171, 0.3));
+  user-select: none;
+}
+
+.float {
+  animation: mascotFloat 2.4s ease-in-out infinite;
+}
+
+@keyframes mascotFloat {
+  0%, 100% { transform: translateY(0) scale(1, 1); }
+  50% { transform: translateY(-6px) scale(1.02, 0.98); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float { animation: none; }
+}

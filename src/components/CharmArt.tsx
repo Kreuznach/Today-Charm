@@ -1,8 +1,10 @@
 /**
  * 부적마다 다른 종이 문양. 사진 파일이 없어도 색과 모양으로 얼굴을 구분합니다.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import type { CharmCategory, CharmRarity } from '../types/charm';
+import { CHARMS } from '../data/charms';
+import { charmImageUrl } from './Mascot';
 import styles from './CharmArt.module.css';
 
 const MARK: Record<string, string> = {
@@ -48,6 +50,9 @@ export default function CharmArt({
   locked = false,
 }: CharmArtProps) {
   const mark = MARK[imageKey] ?? '❀';
+  const charm = CHARMS.find(c => c.charmImageKey === imageKey);
+  const [imgFailed, setImgFailed] = useState(false);
+  const showImage = charm !== undefined && !imgFailed;
   return (
     <div
       className={[
@@ -61,7 +66,21 @@ export default function CharmArt({
     >
       <span className={styles.cornerTL} />
       <span className={styles.cornerBR} />
-      <span className={styles.mark}>{locked ? '?' : mark}</span>
+      {showImage ? (
+        <>
+          <img
+            className={[styles.picture, locked ? styles.silhouette : ''].join(' ')}
+            src={charmImageUrl(charm.charmId)}
+            alt=""
+            draggable={false}
+            loading="lazy"
+            onError={() => setImgFailed(true)}
+          />
+          {locked && <span className={styles.lockMark}>?</span>}
+        </>
+      ) : (
+        <span className={styles.mark}>{locked ? '?' : mark}</span>
+      )}
     </div>
   );
 }

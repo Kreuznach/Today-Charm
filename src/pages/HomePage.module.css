@@ -34,6 +34,18 @@
   color: var(--gray-400);
 }
 
+.greeting {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.theme {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-600);
+}
+
 .heroCard {
   width: 100%;
   background: var(--surface);

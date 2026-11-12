@@ -20,6 +20,7 @@ today-lucky-charm/
 ├── src/
 │   ├── types/charm.ts            # 자료 모양
 │   ├── data/charms.ts            # 부적 24종
+│   ├── data/funText.ts           # 부적 한마디, 배지, 화분, 인사, 도감 칭호
 │   ├── lib/
 │   │   ├── date.ts               # 한국 시간 날짜
 │   │   ├── storage.ts            # 브라우저 저장, 연속 방문
@@ -31,13 +32,16 @@ today-lucky-charm/
 │   ├── components/
 │   │   ├── PrimaryButton.tsx
 │   │   ├── BottomNav.tsx         # 떠 있는 알약 탭바
-│   │   ├── CharmArt.tsx          # 부적 문양
+│   │   ├── CharmArt.tsx          # 부적 그림 (없으면 문양)
+│   │   ├── Mascot.tsx            # 앱 친구 말랑이
 │   │   ├── CharmCard.tsx
 │   │   └── BannerAd.tsx
 │   ├── pages/                    # 화면 네 장
 │   ├── App.tsx                   # 화면 연결
 │   ├── main.tsx                  # 앱을 화면에 붙이는 시작점
 │   └── index.css                 # 공통 색과 레이아웃
+├── public/
+│   └── charms/                   # 말랑이(mallang.png)와 부적 그림 charm-01~24.png
 ├── docs/                         # 설명 문서
 ├── apps-in-toss.config.ts        # 토스 미니앱 설정
 ├── vite.config.ts                # 빌드 설정
@@ -85,7 +89,29 @@ interface CharmCollectionItem { ... } // 도감 한 칸
 - `getCharmStory()`: 같은 부적을 다시 만나면 다른 한 줄을 줘요.
 - `getCategoryEmoji()`, `getCategoryLabel()`, `getCharmEmoji()`: 작은 표시용 도우미
 
-### 4.3 [src/lib/date.ts](../src/lib/date.ts) — 한국 시간
+### 4.3 [src/data/funText.ts](../src/data/funText.ts) — 재미 문구와 규칙
+
+화면에 보이는 **글과 이모지**만 모아 둔 파일입니다. 저장은 하지 않고, 계산해서 보여 주기만 해요.
+
+| 이름 | 하는 일 |
+|------|---------|
+| `getCharmFace(id)`, `getCharmSay(id)` | 부적의 얼굴 이모지, 부적 한마디 |
+| `getMeetBadge(count)` | 같은 부적을 만난 횟수 → 배지 (🆕 👋 🤝 💛 🏅) |
+| `getPlant(streak)` | 연속 방문 → 화분 (🌰 🌱 🌿 🌷 🌻 🌳) |
+| `getGreeting()`, `getWeekdayTheme(date)` | 한국 시간대 인사, 요일 한 줄 |
+| `getCollectionTitle(owned, total)` | 도감 칭호 |
+| `CATEGORY_NICK`, `CATEGORY_STICKER`, `LOCKED_HINT` | 종류 별명, 완성 스티커, 잠긴 칸 힌트 |
+| `DRAW_STEPS` | 뽑는 동안 바뀌는 문구 3개 |
+
+### 4.3.1 부적 그림
+
+- 파일: `public/charms/charm-01.png` ~ `charm-24.png`, 말랑이는 `mallang.png`
+- [CharmArt.tsx](../src/components/CharmArt.tsx)가 `charmImageKey`로 부적을 찾고, 부적 번호로 그림 주소를 만듭니다.
+- 그림이 없거나 못 불러오면 예전 문양(`MARK`)이 대신 나옵니다.
+- 못 만난 부적은 CSS 필터로 검은 그림자처럼 보입니다.
+- 그림 주소는 `import.meta.env.BASE_URL`을 쓰므로, `.ait` 안에서도 상대 경로로 열립니다.
+
+### 4.3.2 [src/lib/date.ts](../src/lib/date.ts) — 한국 시간
 
 다른 날짜 라이브러리는 쓰지 않습니다.
 지금 시각에 9시간을 더해 한국 날짜(`YYYY-MM-DD`)를 만듭니다.

@@ -78,6 +78,7 @@ npm run build:ait
 src/
 ├── types/charm.ts           # 부적, 기록, 도감의 자료 모양
 ├── data/charms.ts           # 부적 24종과 뽑기 함수
+├── data/funText.ts          # 부적 한마디, 배지, 화분, 인사, 도감 칭호
 ├── lib/
 │   ├── date.ts              # 한국 시간(KST) 날짜
 │   ├── storage.ts           # 브라우저에 기록 저장
@@ -87,7 +88,8 @@ src/
 ├── components/
 │   ├── PrimaryButton.tsx    # 큰 버튼
 │   ├── BottomNav.tsx        # 떠 있는 알약 탭바
-│   ├── CharmArt.tsx         # 부적 문양
+│   ├── CharmArt.tsx         # 부적 그림 (없으면 문양)
+│   ├── Mascot.tsx           # 앱 친구 말랑이
 │   ├── CharmCard.tsx        # 부적 카드
 │   └── BannerAd.tsx         # 기록 화면 아래 배너 광고
 ├── pages/                   # 각 화면
@@ -162,3 +164,4 @@ getCollection()
 - [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) — 빌드하고 올리는 방법
 - [docs/CHANGELOG.md](docs/CHANGELOG.md) — 지금까지 바뀐 내용
 - [docs/IMPROVEMENT_PLAN.md](docs/IMPROVEMENT_PLAN.md) — 디자인·유입·재방문 맹점과 개발 계획
+- [docs/FUN_IDEAS.md](docs/FUN_IDEAS.md) — 재미·재방문을 위한 이모지·그림·문구 아이디어

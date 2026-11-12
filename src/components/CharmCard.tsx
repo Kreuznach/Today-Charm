@@ -2,9 +2,10 @@
  * src/components/CharmCard.tsx
  * 부적 카드 — 종류마다 색이 다르고, 특별/시즌은 테두리가 다릅니다.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import type { CharmResult } from '../types/charm';
 import { getCategoryEmoji, getCategoryLabel } from '../data/charms';
+import { CATEGORY_NICK, getCharmFace, getCharmSay, getMeetBadge } from '../data/funText';
 import CharmArt from './CharmArt';
 import styles from './CharmCard.module.css';
 
@@ -12,6 +13,7 @@ interface CharmCardProps {
   charm: CharmResult;
   animationType?: 'fade' | 'reveal' | 'burst';
   story?: string;
+  meetCount?: number;
 }
 
 const RARITY_LABEL: Record<string, string> = {
@@ -20,15 +22,18 @@ const RARITY_LABEL: Record<string, string> = {
   seasonal: '시즌',
 };
 
-export default function CharmCard({ charm, animationType = 'fade', story }: CharmCardProps) {
+export default function CharmCard({ charm, animationType = 'fade', story, meetCount }: CharmCardProps) {
+  const [jelly, setJelly] = useState(false);
   const animClass = animationType === 'reveal'
     ? styles.reveal
     : animationType === 'burst'
     ? styles.burst
     : styles.fadeIn;
+  const badge = meetCount !== undefined ? getMeetBadge(meetCount) : null;
 
   return (
     <div className={[styles.card, styles[charm.charmCategory], styles[charm.rarity], animClass].join(' ')}>
+      {meetCount === 1 && <span className={styles.newRibbon}>NEW</span>}
       <div className={styles.header}>
         <span className={styles.category}>
           {getCategoryEmoji(charm.charmCategory)} {getCategoryLabel(charm.charmCategory)}
@@ -36,15 +41,32 @@ export default function CharmCard({ charm, animationType = 'fade', story }: Char
         <span className={styles.rarity}>{RARITY_LABEL[charm.rarity] ?? charm.rarity}</span>
       </div>
 
-      <CharmArt
-        imageKey={charm.charmImageKey}
-        category={charm.charmCategory}
-        rarity={charm.rarity}
-        size="lg"
-      />
+      <button
+        type="button"
+        className={[styles.artButton, jelly ? styles.jelly : ''].join(' ')}
+        onClick={() => setJelly(true)}
+        onAnimationEnd={() => setJelly(false)}
+        aria-label="부적 그림 만져 보기"
+      >
+        <CharmArt
+          imageKey={charm.charmImageKey}
+          category={charm.charmCategory}
+          rarity={charm.rarity}
+          size="lg"
+        />
+      </button>
 
       <h2 className={styles.name}>{charm.charmName}</h2>
+      <p className={styles.face}>
+        {getCharmFace(charm.charmId)} · {CATEGORY_NICK[charm.charmCategory]}
+      </p>
+      {badge && (
+        <p className={styles.meetBadge}>
+          {badge.icon} {badge.text}
+        </p>
+      )}
 
+      <p className={styles.say}>“{getCharmSay(charm.charmId)}”</p>
       <p className={styles.mainMessage}>{story ?? charm.mainMessage}</p>
 
       <hr className={styles.divider} />

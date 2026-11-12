@@ -7,9 +7,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import CharmCard from '../components/CharmCard';
 import PrimaryButton from '../components/PrimaryButton';
+import Mascot from '../components/Mascot';
 import { getTodayKST } from '../lib/date';
 import { getTodayRecord, saveTodayRecord, getStreak, getAcquiredCount, setTodayUsageDone } from '../lib/storage';
 import { drawRandomCharm, getCharmStory } from '../data/charms';
+import { DRAW_STEPS, getPlant } from '../data/funText';
 import { showRewardAd } from '../lib/config';
 import { shareCharm } from '../lib/share';
 import type { CharmResult, DailyCharmRecord } from '../types/charm';
@@ -32,7 +34,7 @@ export default function TodayPage() {
   const [usageDone, setUsageDone] = useState(false);
   const [shareHint, setShareHint] = useState('');
   const [streak, setStreak] = useState(0);
-
+  const [drawStep, setDrawStep] = useState(0);
   // 이미 뽑은 기록이 있으면 복원
   useEffect(() => {
     const record = getTodayRecord(today);
@@ -44,6 +46,16 @@ export default function TodayPage() {
     }
     setStreak(getStreak(today));
   }, [today]);
+
+  // 뽑는 동안 문구를 차례로 바꿔 보여 줍니다
+  useEffect(() => {
+    if (phase !== 'drawing') return;
+    setDrawStep(0);
+    const id = window.setInterval(() => {
+      setDrawStep(s => Math.min(s + 1, DRAW_STEPS.length - 1));
+    }, 400);
+    return () => window.clearInterval(id);
+  }, [phase]);
 
   const handleDraw = useCallback(() => {
     // 1. 먼저 뽑기 애니메이션 phase로 전환
@@ -109,8 +121,8 @@ export default function TodayPage() {
     return (
       <div className={styles.page}>
         <div className={styles.emptyState}>
-          <span className={styles.emptyEmoji}>🎴</span>
-          <h2 className={styles.emptyTitle}>오늘의 말랑부적을 뽑아 봐요</h2>
+          <Mascot size={120} />
+          <h2 className={styles.emptyTitle}>🍡 말랑이가 부적을 섞어 두었어요</h2>
           <p className={styles.emptyDesc}>
             하루에 한 번 뽑을 수 있어요.
             <br />
@@ -118,7 +130,7 @@ export default function TodayPage() {
             <br />
             다만 두 번째로 나온 부적이 오늘의 부적이 돼요.
           </p>
-          <PrimaryButton onClick={handleDraw}>지금 뽑기 🎴</PrimaryButton>
+          <PrimaryButton onClick={handleDraw}>✨ 두근두근, 오늘은 누구일까?</PrimaryButton>
         </div>
       </div>
     );
@@ -130,7 +142,7 @@ export default function TodayPage() {
       <div className={styles.page}>
         <div className={styles.drawingState}>
           <span className={styles.drawingCard}>🎴</span>
-          <p className={styles.drawingText}>오늘의 부적을 뽑는 중<span className={styles.dots}>...</span></p>
+          <p className={styles.drawingText}>{DRAW_STEPS[drawStep]}</p>
         </div>
       </div>
     );
@@ -142,7 +154,7 @@ export default function TodayPage() {
       <div className={styles.page}>
         <div className={styles.drawingState}>
           <span className={styles.rerollingCard}>✨</span>
-          <p className={styles.drawingText}>새로운 부적을 찾는 중<span className={styles.dots}>...</span></p>
+          <p className={styles.drawingText}>한 번 더 섞어 볼게!<span className={styles.dots}>...</span></p>
         </div>
       </div>
     );
@@ -178,19 +190,24 @@ export default function TodayPage() {
           ? '저장한 부적 · 한 번 더 뽑을 수 있어요'
           : '오늘의 말랑부적'}
       </div>
-      {streak > 0 && <p className={styles.streak}>{streak}일 연속이에요</p>}
+      {streak > 0 && (
+        <p className={styles.streak}>
+          {getPlant(streak).icon} {streak}일 연속 · {getPlant(streak).text}
+        </p>
+      )}
 
       <CharmCard
         charm={displayCharm}
         key={displayCharm.charmId + phase}
         animationType={animationType}
         story={story}
+        meetCount={Math.max(meetCount, 1)}
       />
 
       {(phase === 'saved' || phase === 'final') && (
         <label className={styles.checkRow}>
           <input type="checkbox" checked={usageDone} onChange={handleUsageToggle} />
-          <span>오늘 해 볼 일을 했어요</span>
+          <span>{usageDone ? '✅ 해냈어요! 🍡💮 도장 쾅!' : '⬜ 오늘 해 볼 일을 했어요'}</span>
         </label>
       )}
 
@@ -217,7 +234,7 @@ export default function TodayPage() {
         )}
         {phase === 'final' && (
           <p className={styles.finalNotice}>
-            오늘은 이 부적으로 할게요. 내일 다시 뽑아 봐요
+            🔐 오늘의 부적이 정해졌어요. 내일 또 만나요!
           </p>
         )}
         {shareHint && <p className={styles.finalNotice}>{shareHint}</p>}

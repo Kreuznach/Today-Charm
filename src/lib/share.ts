@@ -3,13 +3,15 @@
  * 돈, 포인트, 쿠폰은 주지 않습니다.
  */
 import type { CharmResult } from '../types/charm';
+import { getCharmFace, getCharmSay } from '../data/funText';
 
 export type ShareResult = 'shared' | 'copied' | 'failed';
 
 export function buildShareText(charm: CharmResult): string {
   return [
-    `오늘 뽑은 말랑부적: ${charm.charmName}`,
-    charm.mainMessage,
+    `🍡 오늘 나는 [${charm.charmName}] ${getCharmFace(charm.charmId)}`,
+    `“${getCharmSay(charm.charmId)}”`,
+    '너의 오늘 부적은 뭐야? 한 장 뽑아 봐!',
     '',
     '진짜 운세가 아니에요. 오늘을 가볍게 버티는 카드예요.',
   ].join('\n');

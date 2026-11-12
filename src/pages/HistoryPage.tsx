@@ -7,6 +7,8 @@ import { getRecentRecords } from '../lib/storage';
 import { getRecentDates, formatDateKST, getTodayKST } from '../lib/date';
 import type { DailyCharmRecord } from '../types/charm';
 import CharmArt from '../components/CharmArt';
+import Mascot from '../components/Mascot';
+import { getCharmSay } from '../data/funText';
 import BannerAd from '../components/BannerAd';
 import styles from './HistoryPage.module.css';
 
@@ -29,9 +31,9 @@ export default function HistoryPage() {
 
       {!hasAny ? (
         <div className={styles.empty}>
-          <span className={styles.emptyEmoji}>📭</span>
-          <p className={styles.emptyText}>아직 뽑은 부적이 없어요.</p>
-          <p className={styles.emptySubText}>오늘의 말랑부적을 뽑아 보세요.</p>
+          <Mascot size={96} />
+          <p className={styles.emptyText}>🍡 아직 텅 비었어요.</p>
+          <p className={styles.emptySubText}>첫 부적을 데려와 볼까요?</p>
         </div>
       ) : (
         <ul className={styles.list}>
@@ -56,8 +58,8 @@ export default function HistoryPage() {
                     />
                     <div className={styles.recordInfo}>
                       <p className={styles.recordName}>{rec.finalCharm.charmName}</p>
-                      <p className={styles.recordMsg}>{rec.finalCharm.mainMessage}</p>
-                      {rec.usageDone && <p className={styles.recordMsg}>오늘 해 볼 일 완료</p>}
+                      <p className={styles.recordMsg}>“{getCharmSay(rec.finalCharm.charmId)}”</p>
+                      {rec.usageDone && <p className={styles.recordMsg}>✅ 오늘 해 볼 일 완료</p>}
                     </div>
                     {rec.rerolled && (
                       <span className={styles.rerolledBadge}>재뽑기</span>
@@ -65,9 +67,9 @@ export default function HistoryPage() {
                   </div>
                 ) : (
                   <div className={[styles.emptyRecord, isToday ? styles.missToday : ''].join(' ')}>
-                    <span className={styles.emptyRecordIcon}>○</span>
+                    <span className={styles.emptyRecordIcon}>{isToday ? '🍡' : '💤'}</span>
                     <span className={styles.emptyRecordText}>
-                      {isToday ? '오늘은 아직 안 뽑았어요' : '이 날은 안 뽑았어요'}
+                      {isToday ? '오늘은 아직 안 뽑았어요' : '이 날은 말랑이가 낮잠 잤어요'}
                     </span>
                   </div>
                 )}

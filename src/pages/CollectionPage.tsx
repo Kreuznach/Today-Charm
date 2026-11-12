@@ -8,7 +8,8 @@ import { getCollection } from '../lib/storage';
 import { getTodayKST } from '../lib/date';
 import { getCharmSeason, getSeason, getSeasonLabel, isCharmDrawable } from '../lib/season';
 import CharmArt from '../components/CharmArt';
-import type { CharmCollectionItem } from '../types/charm';
+import { CATEGORY_NICK, CATEGORY_STICKER, LOCKED_HINT, getCollectionTitle } from '../data/funText';
+import type { CharmCategory, CharmCollectionItem } from '../types/charm';
 import styles from './CollectionPage.module.css';
 
 export default function CollectionPage() {
@@ -25,10 +26,27 @@ export default function CollectionPage() {
   const total = CHARMS.length;
   const pct = Math.round((acquiredCount / total) * 100);
   const nextLocked = CHARMS.find(c => !acquiredIds.has(c.charmId));
+  const title = getCollectionTitle(acquiredCount, total);
+  const categories = Object.keys(CATEGORY_NICK) as CharmCategory[];
+  const doneCategory = (cat: CharmCategory) =>
+    CHARMS.filter(c => c.charmCategory === cat).every(c => acquiredIds.has(c.charmId));
 
   return (
     <div className={styles.page}>
       <h1 className={styles.title}>부적 도감</h1>
+      <p className={styles.collectorTitle}>{title.icon} {title.text}</p>
+
+      <ul className={styles.stickers}>
+        {categories.map(cat => (
+          <li
+            key={cat}
+            className={[styles.sticker, doneCategory(cat) ? styles.stickerDone : ''].join(' ')}
+          >
+            <span>{CATEGORY_STICKER[cat]}</span>
+            <span>{CATEGORY_NICK[cat]}{doneCategory(cat) ? ' 완성!' : ''}</span>
+          </li>
+        ))}
+      </ul>
 
       <div className={styles.progress}>
         <div className={styles.progressHeader}>
@@ -45,6 +63,9 @@ export default function CollectionPage() {
             : ' · 다 모았어요'}
         </span>
         <p className={styles.seasonHint}>지금은 {getSeasonLabel(season)}이에요. 시즌 부적은 그 계절에만 새로 나와요.</p>
+        {nextLocked && (
+          <p className={styles.seasonHint}>🔒 {LOCKED_HINT[nextLocked.charmCategory]}</p>
+        )}
       </div>
 
       <div className={styles.grid}>

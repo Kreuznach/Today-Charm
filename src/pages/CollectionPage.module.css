@@ -69,6 +69,46 @@
   line-height: 1.4;
 }
 
+/* 도감 칭호와 종류별 스티커 */
+.collectorTitle {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--pink-dark);
+  background: var(--pink-light);
+  padding: 5px 12px;
+  border-radius: 100px;
+  margin: -6px 0 12px;
+}
+
+.stickers {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.sticker {
+  display: flex;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gray-400);
+  background: var(--gray-200);
+  padding: 4px 10px;
+  border-radius: 100px;
+  filter: grayscale(1);
+  opacity: 0.7;
+}
+
+.stickerDone {
+  color: var(--pink-dark);
+  background: var(--pink-light);
+  filter: none;
+  opacity: 1;
+}
+
 /* 그리드 */
 .grid {
   display: grid;

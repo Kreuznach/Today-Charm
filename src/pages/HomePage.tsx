@@ -6,10 +6,18 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../components/PrimaryButton';
 import CharmArt from '../components/CharmArt';
+import Mascot from '../components/Mascot';
 import { getTodayKST, formatDateKST } from '../lib/date';
 import { getTodayRecord, getStreak, getCollection } from '../lib/storage';
 import { getNotifyPref, requestDailyReminder, setNotifyPref } from '../lib/notify';
 import { CHARMS } from '../data/charms';
+import {
+  getCharmSay,
+  getCollectionTitle,
+  getGreeting,
+  getPlant,
+  getWeekdayTheme,
+} from '../data/funText';
 import type { DailyCharmRecord } from '../types/charm';
 import styles from './HomePage.module.css';
 
@@ -30,6 +38,10 @@ export default function HomePage() {
   }, [today]);
 
   const lockedLeft = CHARMS.length - owned;
+  const greeting = getGreeting();
+  const weekday = getWeekdayTheme(today);
+  const plant = getPlant(streak);
+  const title = getCollectionTitle(owned, CHARMS.length);
 
   async function handleNotify() {
     if (notifyOn) {
@@ -46,16 +58,16 @@ export default function HomePage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <span className={styles.logo}>❀</span>
+        <Mascot size={96} />
         <h1 className={styles.title}>오늘의 말랑부적</h1>
         <p className={styles.date}>{formatDateKST(today)}</p>
+        <p className={styles.greeting}>{greeting.icon} {greeting.text}</p>
+        <p className={styles.theme}>{weekday.icon} {weekday.text}</p>
       </div>
 
-      {streak > 0 && (
-        <p className={styles.streak}>
-          {streak}일 연속으로 뽑았어요
-        </p>
-      )}
+      <p className={styles.streak}>
+        {plant.icon} {streak > 0 ? `${streak}일 연속 · ` : ''}{plant.text}
+      </p>
 
       <div className={styles.heroCard}>
         {record ? (
@@ -70,12 +82,12 @@ export default function HomePage() {
             <p className={styles.heroDesc}>
               오늘은 <strong>{record.finalCharm.charmName}</strong>이에요.
             </p>
-            <p className={styles.heroQuote}>{record.finalCharm.mainMessage}</p>
+            <p className={styles.heroQuote}>“{getCharmSay(record.finalCharm.charmId)}”</p>
           </>
         ) : (
           <>
             <div className={styles.heroEmoji}>🎴</div>
-            <h2 className={styles.heroTitle}>오늘의 부적을 뽑아 봐요</h2>
+            <h2 className={styles.heroTitle}>말랑이가 부적을 섞고 있어요</h2>
             <p className={styles.heroDesc}>
               하루에 한 번, 오늘을 가볍고 귀엽게 버틸 부적을 뽑아 보세요.
             </p>
@@ -86,17 +98,17 @@ export default function HomePage() {
       <div className={styles.actions}>
         {record ? (
           <PrimaryButton onClick={() => navigate('/today')}>
-            오늘의 말랑부적 보기
+            📜 오늘의 말랑부적 보기
           </PrimaryButton>
         ) : (
           <PrimaryButton onClick={() => navigate('/today')}>
-            오늘의 말랑부적 뽑기
+            🎴 오늘의 말랑부적 뽑기
           </PrimaryButton>
         )}
       </div>
 
       <p className={styles.collectionHint}>
-        도감 {owned} / {CHARMS.length}장
+        {title.icon} {title.text} · 도감 {owned} / {CHARMS.length}장
         {lockedLeft > 0 ? ` · 아직 ${lockedLeft}장이 잠겨 있어요` : ' · 다 모았어요'}
       </p>
 

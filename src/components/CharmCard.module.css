@@ -1,4 +1,6 @@
 .card {
+  position: relative;
+  overflow: hidden;
   background: var(--surface);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
@@ -105,6 +107,70 @@
   color: var(--gray-900);
   letter-spacing: -0.5px;
   text-align: center;
+}
+
+.newRibbon {
+  position: absolute;
+  top: 14px;
+  left: -30px;
+  width: 110px;
+  padding: 3px 0;
+  transform: rotate(-35deg);
+  background: var(--pink);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(224, 99, 126, 0.35);
+}
+
+.artButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 톡 누르면 젤리처럼 말랑~ */
+.jelly {
+  animation: jellyWobble 520ms ease both;
+}
+@keyframes jellyWobble {
+  0%   { transform: scale(1, 1); }
+  25%  { transform: scale(1.12, 0.88); }
+  50%  { transform: scale(0.92, 1.08); }
+  75%  { transform: scale(1.04, 0.97); }
+  100% { transform: scale(1, 1); }
+}
+
+.face {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-600);
+}
+
+.meetBadge {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--pink-dark);
+  background: var(--pink-light);
+  padding: 4px 12px;
+  border-radius: 100px;
+  text-align: center;
+}
+
+.say {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--gray-900);
+  text-align: center;
+  line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jelly { animation: none; }
 }
 
 .mainMessage {
